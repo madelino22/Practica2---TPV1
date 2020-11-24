@@ -39,9 +39,10 @@ void Ghost::render() const {
 	destRect.y = posAct.GetY() * casillaH;
 	destRect.h = casillaH;
 	destRect.w = casillaW;
-
+	texture->renderFrame(destRect, 0, 0);
 
 	//para saber que fantasma(color) hay que renderizar
+	/*
 	switch (color){
 	case 0:
 		texture->renderFrame(destRect, 0, 0);
@@ -59,6 +60,8 @@ void Ghost::render() const {
 		throw "El color del fantasma está mal";
 		break;
 	}
+	*/
+	
 	
 }
 

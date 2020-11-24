@@ -10,13 +10,18 @@
 #include <fstream>
 #include "Ghost.h"
 #include <array>
+#include <list>
 
 
 using namespace std;
 
 using uint = unsigned int;
 
-
+struct Texturas {
+	string file[4]{ "..\\Imagenes\\wall3.png", "..\\Imagenes\\characters1.png", "..\\Imagenes\\burguer1.png", "..\\Imagenes\\food2.png" };
+	int fils[4]{ 1, 4, 1, 1 };
+	int cols[4]{ 1, 14, 1, 1 };
+};
 
 const uint WIN_WIDTH = 800;
 const uint WIN_HEIGHT = 600;
@@ -31,7 +36,7 @@ private:
 	// uint winWidth, winHeight; // También podrían estar aquí
 	Pacman* pacman = nullptr;
 	GameMap* mapa = nullptr;
-	array<Ghost*, 4> ghosts;
+	list<Ghost*> ghosts;
 	bool exit = false;
 	
 	array<Texture*, NUM_TEXTURES> textures;

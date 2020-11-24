@@ -3,11 +3,7 @@
 #include "Error.h"
 
 
-struct Texturas {
-	string file[4]{ "..\\Imagenes\\wall3.png", "..\\Imagenes\\characters1.png", "..\\Imagenes\\burguer1.png", "..\\Imagenes\\food2.png" };
-	int fils[4]{1, 4, 1, 1};
-	int cols[4]{1, 14, 1, 1};
-};
+
 
 Game::Game() {
 	//Constructora, crea el window y el renderer de sdl y además las texturas
@@ -38,7 +34,12 @@ Game::~Game() {
 
 	delete pacman;
 	delete mapa;//invoca al destructor de mapa y todo lo que lleva consigo
-	for (Ghost* g : ghosts) delete g;
+
+	//for (Ghost* g : ghosts) delete g;
+	for (list<Ghost*>::iterator it = ghosts.begin(); it != ghosts.end(); ++it) {
+		delete *it;
+		//el erase avanza solo
+	}
 	for (uint i = 0; i < NUM_TEXTURES; i++) delete textures[i];
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
@@ -57,21 +58,9 @@ void Game::run() {
 		if (frameTime >= FRAME_RATE) {
 			update();
 			startTime = SDL_GetTicks();
-
 		}
 		
 		render();
-
-		//meter las vidas también
-		if (comida <= 0) {
-			exit = true;
-			ganado = true;
-		}
-		//este último else se podria comprobar en el respawn del pacman 
-		//pero por claridad se deja aquí y se ejcuta en cada vuelta
-		else if (vidas <= 0) {
-			exit = true;
-		}
 	}
 
 	if (ganado)
@@ -82,8 +71,20 @@ void Game::run() {
 void Game::update() {
 
 	pacman->update();
-	for(Ghost* g : ghosts)g->update();
 	
+	for(Ghost* g : ghosts)g->update();
+
+
+	//meter las vidas también
+	if (comida <= 0) {
+		exit = true;
+		ganado = true;
+	}
+	//este último else se podria comprobar en el respawn del pacman 
+	//pero por claridad se deja aquí y se ejcuta en cada vuelta
+	else if (vidas <= 0) {
+		exit = true;
+	}
 }
 
 
@@ -93,9 +94,7 @@ void Game::render() const {
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 	mapa->render();
 	pacman->render();
-	for (Ghost* g : ghosts) {
-		g->render();
-	}
+	for (Ghost* g : ghosts) {g->render();}
 	SDL_RenderPresent(renderer);
 
 }
@@ -140,7 +139,8 @@ void Game::LeeMapa() {
 				pacman = new Pacman(Vector2D(y, x), this, textures[1]);
 			}
 			else if (nCelda >= 5 && nCelda<= 8) {
-				ghosts[nCelda- 5] = new Ghost(Vector2D(y, x), this, textures[1], nCelda - 5);
+
+				ghosts.push_back(new Ghost(Vector2D(y, x), this, textures[1], nCelda - 5));
 				//Es la misma textura que el pacman ya que es una spritesheet
 				//En el método render ya se seleccionara cual es
 			}
