@@ -59,10 +59,10 @@ public:
 	}
 
 	//Para que los fantasmas sepan donde está el pacman para saber si hay que comerselo o no
-	Point2D getPacManPosAct() const { return pacman->posAct; }
+	Point2D getPacManPosAct() const { return pacman->GetPosAct(); }
     
 	//Este método es para indicar a los fantasmas si el pacman está comiendo, para que sepan si tienen que comerselo o ser comidos
-	bool pacmanEating() const { return pacman->eating; };
+	bool pacmanEating() const { return pacman->GetEating(); };
 
 	//lleva al pacman a la posición inicial y resta una vida, si no le quedan vidas se encarga de finalizar la partida
 	void pacManRespawn();

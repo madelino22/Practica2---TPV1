@@ -209,10 +209,10 @@ bool Game::NextCell(const Vector2D& dir,const Vector2D& pos) const {
 
 void Game::pacManRespawn() {
 	//se lleva al pacMan a la posicion original
-	pacman->posAct = pacman->posIni;
+	pacman->SetPosAct( pacman->GetPosIni());
 	//Se reestablece las dos direcciones para que se mueva a la derecha al iniciar
-	pacman->dir.SetY(0); pacman->dir.SetX(1);
-	pacman->newDir.SetY(0); pacman->newDir.SetX(1);
+	pacman->SetDir(0, 1);
+	pacman->SetNewDir(0, 1);
 
 	//Se resta las vidas y se le muestra en pantalla al jugador
 	vidas--;

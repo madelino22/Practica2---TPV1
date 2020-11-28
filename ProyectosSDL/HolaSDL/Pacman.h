@@ -15,7 +15,6 @@ class Game; // para que pueda guardar el juego y no haya inclusiones circulares
 
 class Pacman
 {
-	friend class Game;
 
 private:
 
@@ -34,6 +33,18 @@ public:
 	Pacman(Point2D pIni,Game* g, Texture* t) :
 		posIni(pIni), posAct(pIni), game(g), texture(t),  dir(Vector2D(1,0)) , newDir(Vector2D(1, 0)), eating(false), eatingDistance(15) {}
 	~Pacman() {}
+
+	Point2D GetPosAct() const { return posAct; }
+	Point2D GetPosIni() const { return posIni; }
+	bool GetEating() const { return eating; }
+
+
+	void SetPosAct(Point2D newpos) { posAct = newpos; }
+	void SetDir(int x, int y) { dir.SetX(x); dir.SetY(y); }
+	void SetNewDir(int x, int y) { newDir.SetX(x); newDir.SetY(y); }
+
+
+
 
 	void render() const;
 	void update();

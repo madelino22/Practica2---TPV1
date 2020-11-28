@@ -11,13 +11,12 @@
 using namespace std;
 
 using uint = unsigned int;
-class Game; // para que pueda guardar el juego y no haya inclusiones circulares
 
+class Game;
 
 
 class Ghost
 {
-	friend class Game;
 
 private:
 
