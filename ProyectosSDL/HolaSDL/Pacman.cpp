@@ -8,9 +8,16 @@ void Pacman::render() const {
 	int casillaH = WIN_HEIGHT / game->GetNFils();
 	int casillaW = WIN_WIDTH / game->GetNCols();
 	SDL_Rect destRect;
-
+	
+	/*
 	destRect.x = posAct.GetX() * casillaW;
 	destRect.y = posAct.GetY() * casillaH;
+	*/
+
+	Point2D posEnPixel = game->mapCordsToSDLPoint(posAct);
+	destRect.y = posEnPixel.GetX();
+	destRect.x = posEnPixel.GetY();
+	
 	destRect.h = casillaH;
 	destRect.w = casillaW;
 

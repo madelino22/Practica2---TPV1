@@ -22,13 +22,12 @@ Game::Game() {
 		textures[i]->load(texturas.file[i], texturas.fils[i], texturas.cols[i]);
 	}
 
-	
+	nivel = 1;
 	//valor inicial de las variables de la partida,
 	//comida se rellena al construir el mapa en leeMapa
 	comida = 0;
 	vidas = 3;
-
-	LeeMapa();
+	loadLevelFile("..\\Mapas\\level01.dat");
 }
 Game::~Game() {
 
@@ -63,10 +62,7 @@ void Game::run() {
 		render();
 	}
 
-	if (ganado)
-		cout << "Has ganado!\n";
-	else
-		cout << "Has perdido :(\n";
+	
 }
 void Game::update() {
 
@@ -77,14 +73,29 @@ void Game::update() {
 
 	//meter las vidas también
 	if (comida <= 0) {
-		exit = true;
 		ganado = true;
+		
+		if (ganado && nivel == 4) {
+			exit = true;
+			cout << "Has ganado!\n";
+
+		}
+		else if (ganado && nivel < 4) {
+			ganado = false;
+			nivel++;
+			string nuevoNivel = "..\\Mapas\\level0" + to_string(nivel) + ".dat";
+			destruccionesCambioNivel();
+			loadLevelFile(nuevoNivel);
+			cout << "salio";
+		}
 	}
 	//este último else se podria comprobar en el respawn del pacman 
 	//pero por claridad se deja aquí y se ejcuta en cada vuelta
 	else if (vidas <= 0) {
+		cout << "Has perdido :(\n";
 		exit = true;
 	}
+
 }
 
 
@@ -109,42 +120,101 @@ void Game::handleEvents() {
 	}
 }
 
+void Game::destruccionesCambioNivel() {
+	delete pacman;
+	pacman = nullptr;
+
+	delete mapa;//invoca al destructor de mapa y todo lo que lleva consigo
+	mapa = nullptr;
+
+	//for (Ghost* g : ghosts) delete g;
+	for (list<Ghost*>::iterator it = ghosts.begin(); it != ghosts.end(); ++it) {
+		delete* it;
+		//el erase avanza solo
+	}
+	ghosts.clear();
+
+}
+	void Game::loadLevelFile(string file)
+	{
+
+		cout << "Cargado con nuevo metodo \n";
+		std::ifstream in(file);
+		if (!in.is_open()) throw(Error("No se encuentra el fichero"));
+
+		auto cinbuf = std::cin.rdbuf(in.rdbuf());
 
 
-void Game::LeeMapa() {
-#ifndef DOMJUDGE
-	std::ifstream in("..\\Mapas\\level01.dat");
-	if (!in.is_open()) throw(Error("No se encuentra el fichero"));
-	
-	auto cinbuf = std::cin.rdbuf(in.rdbuf()); 
-#endif 
+		int fils, cols;
 
-	int fils, cols;
+		cin >> fils >> cols;
 
-	cin >> fils >> cols;
+		mapa = new GameMap(fils, cols, this, textures[0], textures[2], textures[3]);
 
-	mapa = new GameMap(fils, cols,this, textures[0], textures[2], textures[3]);
-	//para cada celda se lee su numero y se añade al array de GameMap
-	for (int x = 0; x < fils; x++) {
-		for (int y = 0; y < cols; y++) {
-			int nCelda;
-			cin >> nCelda;
-			mapa->celdasMapa[x][y] = (MapCell)nCelda;
+		cout << "Altura de la casilla: " << mapa->casillaH << "   " << "Anchura de la casilla" << mapa->casillaW << "\n";
+		//para cada celda se lee su numero y se añade al array de GameMap
+		for (int x = 0; x < fils; x++) {
+			for (int y = 0; y < cols; y++) {
+				int nCelda;
+				cin >> nCelda;
+				mapa->celdasMapa[x][y] = (MapCell)nCelda;
 
-			//si se añade una comida se suma una al contador de la comida para llevar la cuenta en la partida
-			// de cuandtas hay al principio y poder ir eliminando
-			if ((MapCell)nCelda == Food)comida++;
-			if (nCelda == 9) {
-				//Creación del pacman
-				pacman = new Pacman(Vector2D(y, x), this, textures[1]);
+				//si se añade una comida se suma una al contador de la comida para llevar la cuenta en la partida
+				// de cuandtas hay al principio y poder ir eliminando
+				if ((MapCell)nCelda == Food)comida++;
+				if (nCelda == 9) {
+					//Creación del pacman
+
+					
+					pacman = new Pacman(Vector2D(y, x), this, textures[1]);
+					cout << mapCordsToSDLPoint(getPacManPosAct()).GetX() << "," << mapCordsToSDLPoint(getPacManPosAct()).GetY() << "\n";
+				}
+				else if (nCelda >= 5 && nCelda <= 8) {
+
+					ghosts.push_back(new Ghost(Vector2D(y, x), this, textures[1], nCelda - 5));
+					//Es la misma textura que el pacman ya que es una spritesheet
+					//En el método render ya se seleccionara cual es
+				}
+
 			}
-			else if (nCelda >= 5 && nCelda<= 8) {
+		}
+	}
 
-				ghosts.push_back(new Ghost(Vector2D(y, x), this, textures[1], nCelda - 5));
-				//Es la misma textura que el pacman ya que es una spritesheet
-				//En el método render ya se seleccionara cual es
+
+	void Game::LeeMapa() {
+		cout << "Se usa leemapa";
+		std::ifstream in("..\\Mapas\\level01.dat");
+		if (!in.is_open()) throw(Error("No se encuentra el fichero"));
+
+		auto cinbuf = std::cin.rdbuf(in.rdbuf());
+
+		int fils, cols;
+
+		cin >> fils >> cols;
+
+		mapa = new GameMap(fils, cols, this, textures[0], textures[2], textures[3]);
+		//para cada celda se lee su numero y se añade al array de GameMap
+		for (int x = 0; x < fils; x++) {
+			for (int y = 0; y < cols; y++) {
+				int nCelda;
+				cin >> nCelda;
+				mapa->celdasMapa[x][y] = (MapCell)nCelda;
+
+				//si se añade una comida se suma una al contador de la comida para llevar la cuenta en la partida
+				// de cuandtas hay al principio y poder ir eliminando
+				if ((MapCell)nCelda == Food)comida++;
+				if (nCelda == 9) {
+					//Creación del pacman
+					pacman = new Pacman(Vector2D(y, x), this, textures[1]);
+				}
+				else if (nCelda >= 5 && nCelda <= 8) {
+
+					ghosts.push_back(new Ghost(Vector2D(y, x), this, textures[1], nCelda - 5));
+					//Es la misma textura que el pacman ya que es una spritesheet
+					//En el método render ya se seleccionara cual es
+				}
+
 			}
-			
 		}
 	}
 
@@ -160,10 +230,7 @@ void Game::LeeMapa() {
 	*/
 	
 
-#ifndef DOMJUDGE // para dejar todo como estaba al principio
-	std::cin.rdbuf(cinbuf);
-#endif
-}
+
 
 
 //Estos dos metodos es para que el pacman y los fantasmas sepan el tamaño del mapa para renderizarlos y saber si se pueden mover

@@ -41,11 +41,17 @@ private:
 	
 	array<Texture*, NUM_TEXTURES> textures;
 
+	int nivel;
+
 	int vidas;
 	int comida;
 	bool ganado;
 
 	void LeeMapa();
+	void loadLevelFile(string file);
+	void destruccionesCambioNivel();
+
+
 public:
 	Game();
 	~Game();
@@ -58,8 +64,14 @@ public:
 		return mapa->celdasMapa[y][x];;
 	}
 
+
+
 	//Para que los fantasmas sepan donde está el pacman para saber si hay que comerselo o no
 	Point2D getPacManPosAct() const { return pacman->GetPosAct(); }
+	//Devuelve un punto en [y,x] con las cordenadas(en piexeles) de la esquina superior de donde deberia ir pintado el ese cuadrado
+	Point2D mapCordsToSDLPoint(Point2D coords) { return Point2D(coords.GetY() * mapa->casillaH, coords.GetX() * mapa->casillaW); };
+	//Devuelve un punto en [y,x] con las cordenadas(en casilla) de la esquina superior de donde deberia ir pintado el ese cuadrados
+	Point2D SDLPointToMapCoords(Point2D mapCoor) { return Point2D(mapCoor.GetY() / mapa->casillaH, mapCoor.GetX() / mapa->casillaW); }
     
 	//Este método es para indicar a los fantasmas si el pacman está comiendo, para que sepan si tienen que comerselo o ser comidos
 	bool pacmanEating() const { return pacman->GetEating(); };
