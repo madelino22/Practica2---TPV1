@@ -153,11 +153,11 @@ void Game::destruccionesCambioNivel() {
 
 		cout << "Altura de la casilla: " << mapa->casillaH << "   " << "Anchura de la casilla" << mapa->casillaW << "\n";
 		//para cada celda se lee su numero y se añade al array de GameMap
-		for (int x = 0; x < fils; x++) {
-			for (int y = 0; y < cols; y++) {
+		for (int y = 0; y < fils; y++) {
+			for (int x = 0; x < cols; x++) {
 				int nCelda;
 				cin >> nCelda;
-				mapa->celdasMapa[x][y] = (MapCell)nCelda;
+				mapa->celdasMapa[y][x] = (MapCell)nCelda;
 
 				//si se añade una comida se suma una al contador de la comida para llevar la cuenta en la partida
 				// de cuandtas hay al principio y poder ir eliminando
@@ -194,11 +194,11 @@ void Game::destruccionesCambioNivel() {
 
 		mapa = new GameMap(fils, cols, this, textures[0], textures[2], textures[3]);
 		//para cada celda se lee su numero y se añade al array de GameMap
-		for (int x = 0; x < fils; x++) {
-			for (int y = 0; y < cols; y++) {
+		for (int y = 0; y < fils; y++) {
+			for (int x = 0; x < cols; x++) {
 				int nCelda;
 				cin >> nCelda;
-				mapa->celdasMapa[x][y] = (MapCell)nCelda;
+				mapa->celdasMapa[y][x] = (MapCell)nCelda;
 
 				//si se añade una comida se suma una al contador de la comida para llevar la cuenta en la partida
 				// de cuandtas hay al principio y poder ir eliminando

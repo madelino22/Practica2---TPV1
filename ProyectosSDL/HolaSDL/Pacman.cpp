@@ -15,8 +15,8 @@ void Pacman::render() const {
 	*/
 
 	Point2D posEnPixel = game->mapCordsToSDLPoint(posAct);
-	destRect.y = posEnPixel.GetX();
-	destRect.x = posEnPixel.GetY();
+	destRect.y = posEnPixel.GetY();
+	destRect.x = posEnPixel.GetX();
 	
 	destRect.h = casillaH;
 	destRect.w = casillaW;

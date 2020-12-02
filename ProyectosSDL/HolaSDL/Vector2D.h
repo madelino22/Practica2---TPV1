@@ -10,7 +10,7 @@ private:
 
 public:
 	Vector2D() { y = 0; x = 0;};
-	Vector2D(int a, int b) { x = a; y = b; };
+	Vector2D(int b, int a) {  y = b; x = a;};
 
 	int GetY() const { return y; };
 	int GetX() const { return x; };
