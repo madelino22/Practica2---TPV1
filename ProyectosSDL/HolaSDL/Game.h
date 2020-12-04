@@ -59,6 +59,9 @@ public:
 	int GetNFils() const;
 	int GetNCols() const;
 	bool NextCell(const Vector2D& dir,const Vector2D& pos) const;
+	bool tryMove(const SDL_Rect& rect, Vector2D dir, Point2D& newPos);
+		//El rect es el  rectangulo actual del gameObject qu ese quiere mover, sustituye a pos de NextCel
+	
 
 	MapCell contenidoCelda(int y, int x) const{
 		return mapa->celdasMapa[y][x];;

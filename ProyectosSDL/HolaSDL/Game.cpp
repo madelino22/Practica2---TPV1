@@ -274,6 +274,34 @@ bool Game::NextCell(const Vector2D& dir,const Vector2D& pos) const {
 	return celdaVacia;
 }
 
+
+
+bool Game::tryMove(const SDL_Rect& rect, Vector2D dir, Point2D& newPos) {
+	SDL_Rect mapRect = mapa->getDestRect();
+
+	//dire va a ser 1 en la dirección en la que se vaya, por eso se le multiplica por 10, para que avance 10 pixeles en esa dir
+	newPos.SetX(rect.x + dir.GetX() * 10);
+	newPos.SetY(rect.y + dir.GetY() * 10);
+
+	if (dir.GetX() > 0 && (newPos.GetX() + rect.w) >= mapRect.x + mapRect.w) {
+		newPos.SetX(mapRect.x + 10);
+	}
+	else if (dir.GetX() < 0 && newPos.GetX() <= mapRect.x) {
+		newPos.SetX(mapRect.x + mapRect.w - 10);
+	}
+	else if (dir.GetY() > 0 && (newPos.GetY() + rect.h) >= mapRect.y + mapRect.h) {
+		newPos.SetY(mapRect.y + 10);
+	}
+	else if (dir.GetY() < 0 && newPos.GetY() <= mapRect.y) {
+		newPos.SetX(mapRect.y + mapRect.h - 10);
+	}
+
+	SDL_Rect newRect = { newPos.GetX(), newPos.GetY(), rect.w, rect.h };
+
+	return !(mapa->intersectsWall(newRect));
+
+}
+
 void Game::pacManRespawn() {
 	//se lleva al pacMan a la posicion original
 	pacman->SetPosAct( pacman->GetPosIni());

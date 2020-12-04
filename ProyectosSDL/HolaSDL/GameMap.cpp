@@ -39,6 +39,17 @@ GameMap::~GameMap() {
 	
 }
 
+
+SDL_Rect GameMap::getDestRect() {
+	SDL_Rect rectMap;
+	//esto sería el margen si hibiera desde la izquierda
+	rectMap.x = MARGENX;
+	rectMap.y = MARGENY;
+	rectMap.w = cols * casillaW;
+	rectMap.h = fils * casillaH;
+
+	return rectMap;
+}
 void GameMap::render() const {
 
 	//recorre todas las casillas del mapa pintandola si son muos comida o vitaminas,

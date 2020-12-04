@@ -17,6 +17,9 @@
 using uint = unsigned int;
 using namespace std;
 
+const int MARGENX = 0;
+const int MARGENY = 0;
+
 
 enum MapCell{Empty, Wall, Food, Vitamins};
 class Game; // para que pueda guardar el juego y no haya inclusiones circulares
@@ -39,6 +42,9 @@ public:
 	GameMap(){};
 	GameMap(int fils, int cols, Game* game, Texture* textMap, Texture* textVit, Texture* textFood);
 	~GameMap();
+
+	bool intersectsWall(SDL_Rect rect);
+	SDL_Rect getDestRect();
 
 	void render() const;
 
