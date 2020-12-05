@@ -14,10 +14,10 @@ void Pacman::render() const {
 	destRect.y = posAct.GetY() * casillaH;
 	*/
 
-	Point2D posEnPixel = game->mapCordsToSDLPoint(posAct);
+	//Point2D posEnPixel = game->mapCordsToSDLPoint(posAct);
 	
-	destRect.y = posEnPixel.GetY();
-	destRect.x = posEnPixel.GetX();
+	destRect.y = posAct.GetY();
+	destRect.x = posAct.GetX();
 	
 	destRect.h = casillaH;
 	destRect.w = casillaW;
@@ -48,13 +48,31 @@ void Pacman::update() {
 	int nFils = game->GetNFils();
 	//el primer if checkea si se puede ir a la última posición indicada por la pulsacíon, si se puede se cambia la dirección, si no sigue yendo a la que estaba yendo
 
-	
+	/*
 	if (game->NextCell(newDir, posAct))dir = newDir;
 	if (game->NextCell(dir, posAct)) {
 		//la suma de nCols y nFils dentro del parentesis es para que al ir en velocidad negativa y llegue al borde aparezca al otro lado tmb
 		posAct.SetX((posAct.GetX() + dir.GetX() + nCols) % nCols);
 		posAct.SetY((posAct.GetY() + dir.GetY() + nFils) % nFils);
 	}
+	*/
+	SDL_Rect rect;
+	rect.x = posAct.GetX();
+	rect.y = posAct.GetY();
+	//Esto está pinchado por código, cuando se haga polimorfismo se podrá hacer bien
+	rect.w = 28;
+	rect.h = 20;
+
+	Point2D newPos;
+	if (game->tryMove(rect, newDir, newPos)){
+		dir = newDir;
+		posAct = newPos;
+	}
+	else if(game->tryMove(rect, dir, newPos)){
+		posAct = newPos;
+	}
+
+	
 
 	comerAlimento();
 

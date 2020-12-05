@@ -26,7 +26,11 @@ struct Texturas {
 const uint WIN_WIDTH = 800;
 const uint WIN_HEIGHT = 600;
 const uint NUM_TEXTURES = 4;
-const uint32_t FRAME_RATE = 200;
+const uint32_t FRAME_RATE = 200/4;
+//para que pueda tomar bien als intersecciones la division de abajo tiene que dar justa, preguntar al profe
+const int avanceEnX = 28 / 4;
+const int avanceEnY = 20 / 4;
+
 class Game
 {
 	
@@ -60,11 +64,14 @@ public:
 	int GetNCols() const;
 	bool NextCell(const Vector2D& dir,const Vector2D& pos) const;
 	bool tryMove(const SDL_Rect& rect, Vector2D dir, Point2D& newPos);
+
 		//El rect es el  rectangulo actual del gameObject qu ese quiere mover, sustituye a pos de NextCel
 	
 
 	MapCell contenidoCelda(int y, int x) const{
-		return mapa->celdasMapa[y][x];;
+		Point2D coordenadas = SDLPointToMapCoords(Point2D(y, x));
+		
+		return mapa->celdasMapa[coordenadas.GetY()][coordenadas.GetX()];
 	}
 
 
@@ -72,9 +79,9 @@ public:
 	//Para que los fantasmas sepan donde está el pacman para saber si hay que comerselo o no
 	Point2D getPacManPosAct() const { return pacman->GetPosAct(); }
 	//Devuelve un punto en [y,x] con las cordenadas(en piexeles) de la esquina superior de donde deberia ir pintado el ese cuadrado
-	Point2D mapCordsToSDLPoint(Point2D coords) { return Point2D(coords.GetY() * mapa->casillaH, coords.GetX() * mapa->casillaW); };
+	Point2D mapCordsToSDLPoint(Point2D coords) const{ return Point2D(coords.GetY() * mapa->casillaH, coords.GetX() * mapa->casillaW); };
 	//Devuelve un punto en [y,x] con las cordenadas(en casilla) de la esquina superior de donde deberia ir pintado el ese cuadrados
-	Point2D SDLPointToMapCoords(Point2D mapCoor) { return Point2D(mapCoor.GetY() / mapa->casillaH, mapCoor.GetX() / mapa->casillaW); }
+	Point2D SDLPointToMapCoords(Point2D mapCoor) const { return Point2D(mapCoor.GetY() / mapa->casillaH, mapCoor.GetX() / mapa->casillaW); }
     
 	//Este método es para indicar a los fantasmas si el pacman está comiendo, para que sepan si tienen que comerselo o ser comidos
 	bool pacmanEating() const { return pacman->GetEating(); };
@@ -89,7 +96,8 @@ public:
 
 	//hace que la casilla que tiene los parámetros x e y sea vacía, es para cuando se come vitamina o comida
 	void EmptyCell(int y, int x) {
-		mapa->celdasMapa[y][x] = Empty;
+		Point2D coords = SDLPointToMapCoords(Point2D(y, x));
+		mapa->celdasMapa[coords.GetY()][coords.GetX()] = Empty;
 	};
 
 	void run();

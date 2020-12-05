@@ -43,7 +43,7 @@ public:
 	GameMap(int fils, int cols, Game* game, Texture* textMap, Texture* textVit, Texture* textFood);
 	~GameMap();
 
-	bool intersectsWall(SDL_Rect rect);
+	bool IntersectsWall(SDL_Rect rect);
 	SDL_Rect getDestRect();
 
 	void render() const;

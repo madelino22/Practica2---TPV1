@@ -5,8 +5,8 @@ GameMap::GameMap(int nFils, int nCols, Game* g, Texture* textWall, Texture* text
 	fils = nFils;
 	cols = nCols;
 	celdasMapa = new MapCell * [fils];
-	for (int x = 0; x < fils; x++) {
-		celdasMapa[x] = new MapCell[cols];
+	for (int y = 0; y < fils; y++) {
+		celdasMapa[y] = new MapCell[cols];
 	}
 	game = g;
 	textureWall = textWall;
@@ -14,9 +14,9 @@ GameMap::GameMap(int nFils, int nCols, Game* g, Texture* textWall, Texture* text
 	textureFood = textFood;
 
 	//Al construir creear el mapa vacío
-	for (int x = 0; x < fils; x++) {
-		for (int y = 0; y < cols; y++) {
-			celdasMapa[x][y] = Empty;
+	for (int y = 0; y < fils; y++) {
+		for (int x = 0; x < cols; x++) {
+			celdasMapa[y][x] = Empty;
 		}
 	}
 
@@ -75,4 +75,16 @@ void GameMap::render() const {
 			}
 		}
 	}
+}
+
+bool GameMap::IntersectsWall(SDL_Rect rect) {
+	Point2D topLeft =  game->SDLPointToMapCoords(Point2D(rect.y, rect.x));
+	Point2D botRight = game->SDLPointToMapCoords(Point2D(rect.y + casillaH-1, rect.x + casillaW-1));
+
+	for (int y = topLeft.GetY(); y <= botRight.GetY(); y++) {
+		for (int x = topLeft.GetX(); x <= botRight.GetX(); x++) {
+			if (celdasMapa[y][x] == Wall) return true;
+		}
+	}
+	return false;
 }
