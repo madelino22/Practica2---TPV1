@@ -26,10 +26,10 @@ struct Texturas {
 const uint WIN_WIDTH = 800;
 const uint WIN_HEIGHT = 600;
 const uint NUM_TEXTURES = 4;
-const uint32_t FRAME_RATE = 200/4;
-//para que pueda tomar bien als intersecciones la division de abajo tiene que dar justa, preguntar al profe
-const int avanceEnX = 28 / 4;
-const int avanceEnY = 20 / 4;
+const uint32_t FRAME_RATE = 15;
+
+const int avanceEnX = 1;
+const int avanceEnY = 1;
 
 class Game
 {
