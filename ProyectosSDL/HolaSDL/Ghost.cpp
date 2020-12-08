@@ -35,8 +35,8 @@ void Ghost::render() const {
 	//creacion e inicializacion del rectángulo destino
 	SDL_Rect destRect;
 
-	destRect.x = posAct.GetX() * casillaW;
-	destRect.y = posAct.GetY() * casillaH;
+	destRect.x = posAct.GetX();
+	destRect.y = posAct.GetY();
 	destRect.h = casillaH;
 	destRect.w = casillaW;
 	texture->renderFrame(destRect, 0, color*2);
@@ -49,11 +49,23 @@ void Ghost::update() {
 	int nFils = game->GetNFils();
 	
 	Vector2D posibles[3];
+	Point2D casillasPosibles[3];
 	Vector2D dirPos = dir;
 	int tam = 0;
+
+	SDL_Rect rect;
+	rect.x = posAct.GetX();
+	rect.y = posAct.GetY();
+	//Esto está pinchado por código, cuando se haga polimorfismo se podrá hacer bien
+	rect.w = 28;
+	rect.h = 20;
+
+
 	for (int x = 0; x < 3; x++) {
-		if (game->NextCell(dirPos, posAct)) {
+		Point2D casillaDestino;
+		if (game->tryMove(rect, dirPos, casillaDestino)) {
 			posibles[tam] = dirPos;
+			casillasPosibles[tam] = casillaDestino;
 			tam++;
 		}
 		//primero checkeo si en la direcion que está yendo se puede,
@@ -63,20 +75,25 @@ void Ghost::update() {
 		else if (x == 1) dirPos.Invierte();
 	}
 
+	comer(game->getPacManPosAct());
+
 	if (tam == 0) {
+		Point2D destino;
 	    dir.Invierte();
+		game->tryMove(rect, dir, destino);
+		posAct = destino;
 	}
 	
 	else {
 		//selecciona al azar de entre una de las posibles
 		int nuevaDir = rand() % tam;
 		dir = posibles[nuevaDir];
+		posAct = casillasPosibles[nuevaDir];
 	}
 	
-	comer(game->getPacManPosAct());
-	//la suma de nCols y nFils dentro del parentesis es para que al ir en velocidad negativa y llegue al borde aparezca al otro lado tmb
-	posAct.SetX((posAct.GetX() + dir.GetX() + nCols) % nCols);
-	posAct.SetY((posAct.GetY() + dir.GetY() + nFils) % nFils);
+	
 	comer(game->getPacManPosAct());
 	//Come antes y depués del movimiento para evitar que se crucen sin interactuar
+
+	
 }

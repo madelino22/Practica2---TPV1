@@ -34,6 +34,8 @@ public:
 	Ghost(Point2D pIni, Game* g, Texture* t, int c) :
 		posIni(pIni), posAct(pIni), game(g), texture(t), dir(Vector2D(-1, 0)), color(c) {}
 	~Ghost() {}
+
+	void EscribePosicion(){ cout << posAct.GetY() << " " << posAct.GetX(); }
 	void render() const;
 	void update();
 	void handleEvents(const SDL_Event& event);

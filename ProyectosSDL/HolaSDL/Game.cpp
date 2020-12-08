@@ -171,7 +171,8 @@ void Game::destruccionesCambioNivel() {
 				}
 				else if (nCelda >= 5 && nCelda <= 8) {
 
-					ghosts.push_back(new Ghost(Vector2D(y, x), this, textures[1], nCelda - 5));
+					ghosts.push_back(new Ghost(mapCordsToSDLPoint(Point2D(y, x)), this, textures[1], nCelda - 5));
+					ghosts.front()->EscribePosicion();
 					//Es la misma textura que el pacman ya que es una spritesheet
 					//En el método render ya se seleccionara cual es
 				}
@@ -279,6 +280,8 @@ bool Game::NextCell(const Vector2D& dir,const Vector2D& pos) const {
 bool Game::tryMove(const SDL_Rect& rect, Vector2D dir, Point2D& newPos) {
 	SDL_Rect mapRect = mapa->getDestRect();
 
+
+	
 	//dire va a ser 1 en la dirección en la que se vaya, por eso se le multiplica por 10, para que avance 10 pixeles en esa dir
 	newPos.SetX(rect.x + dir.GetX() * avanceEnX);
 	newPos.SetY(rect.y + dir.GetY() * avanceEnY);
