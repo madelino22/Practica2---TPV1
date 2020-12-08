@@ -39,7 +39,7 @@ GameMap::~GameMap() {
 	
 }
 
-
+//Este metodo hay qu eleminarle ya que se hereda de gameObject
 SDL_Rect GameMap::getDestRect() {
 	SDL_Rect rectMap;
 	//esto sería el margen si hibiera desde la izquierda

@@ -68,7 +68,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameCharacter.cpp" />
     <ClCompile Include="GameMap.cpp" />
+    <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Ghost.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Pacman.cpp" />
@@ -79,7 +81,9 @@
     <ClInclude Include="checkML.h" />
     <ClInclude Include="Error.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="GameCharacter.h" />
     <ClInclude Include="GameMap.h" />
+    <ClInclude Include="GameObject.h" />
     <ClInclude Include="Ghost.h" />
     <ClInclude Include="Pacman.h" />
     <ClInclude Include="Texture.h" />
