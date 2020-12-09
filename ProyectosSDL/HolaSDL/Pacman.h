@@ -6,48 +6,43 @@
 #include <iostream>
 #include "Texture.h"
 #include "Vector2D.h"
-
+#include "GameCharacter.h"
 using namespace std;
 
 using uint = unsigned int;
 class Game; // para que pueda guardar el juego y no haya inclusiones circulares
 
 
-class Pacman
+class Pacman: public GameCharacter
 {
 
 private:
 
-	Point2D posAct, posIni;
-	Vector2D dir, newDir;
-	Game* game;
-
-	Texture* texture = nullptr;
+	
+	Vector2D  newDir;
 	
 	bool eating;
 	int eatingDistance;//la duración/distancia del modo caza del pacman
 	void comerAlimento();
 
 public:
-	Pacman() {}
-	Pacman(Point2D pIni,Game* g, Texture* t) :
-		posIni(pIni), posAct(pIni), game(g), texture(t),  dir(Vector2D(1,0)) , newDir(Vector2D(1, 0)), eating(false), eatingDistance(15) {}
-	~Pacman() {}
+	Pacman(Point2D posAct, int casillaWidth, int casillaHeight, Game* gameC, Point2D posIniC, Vector2D dirC, Texture* textureC, Point2D coorTextureC);
+	//virtual ~Pacman() {}
 
-	Point2D GetPosAct() const { return posAct; }
+	Point2D GetPosAct() const { return pos; }
 	Point2D GetPosIni() const { return posIni; }
 	bool GetEating() const { return eating; }
 
 
-	void SetPosAct(Point2D newpos) { posAct = newpos; }
+	void SetPosAct(Point2D newpos) { pos = newpos; }
 	void SetDir(int x, int y) { dir.SetX(x); dir.SetY(y); }
 	void SetNewDir(int x, int y) { newDir.SetX(x); newDir.SetY(y); }
 
 
 
 
-	void render() const;
-	void update();
+	virtual void render() const;
+	virtual void update();
 	void handleEvents(const SDL_Event& event);
 };
 

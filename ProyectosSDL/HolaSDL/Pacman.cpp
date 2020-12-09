@@ -2,26 +2,14 @@
 #include "Game.h"
 
 
-
+Pacman::Pacman(Point2D posAct, int casillaWidth, int casillaHeight, Game* gameC, Point2D posIniC, Vector2D dirC, Texture* textureC, Point2D coorTextureC)
+	: GameCharacter(posAct, casillaWidth, casillaHeight, gameC, posIniC, dirC, textureC, coorTexture), newDir(dirC), eating(false), eatingDistance(2000)
+{
+	
+ }
 void Pacman::render() const {
 	
-	int casillaH = WIN_HEIGHT / game->GetNFils();
-	int casillaW = WIN_WIDTH / game->GetNCols();
-	SDL_Rect destRect;
-	
-	/*
-	destRect.x = posAct.GetX() * casillaW;
-	destRect.y = posAct.GetY() * casillaH;
-	*/
-
-	//Point2D posEnPixel = game->mapCordsToSDLPoint(posAct);
-	
-	destRect.y = posAct.GetY();
-	destRect.x = posAct.GetX();
-	
-	destRect.h = casillaH;
-	destRect.w = casillaW;
-
+	SDL_Rect destRect = getDestRect();
 	//si está en modo caza tiene distinto sprite
 	if(!eating)texture->renderFrame(destRect, 0, 10);
 	else {texture->renderFrame(destRect, 0, 11);}
@@ -30,46 +18,30 @@ void Pacman::render() const {
 
 void Pacman::comerAlimento() {
 	//Pueden ser o vitaminas o comida
-	if (game->contenidoCelda(posAct.GetY(), posAct.GetX()) == Food) {
+	if (game->contenidoCelda(pos.GetY(), pos.GetX()) == Food) {
 		//si es comida la elmina del mapa y la resta del contador de comida restante, cuando este contador llegue a 0 el juego se acaba
 		game->Comida();
-		game->EmptyCell(posAct.GetY(), posAct.GetX());
+		game->EmptyCell(pos.GetY(), pos.GetX());
 	}
-	else if (game->contenidoCelda(posAct.GetY(), posAct.GetX()) == Vitamins) {
+	else if (game->contenidoCelda(pos.GetY(), pos.GetX()) == Vitamins) {
 		//si es vitamina se pone en modo caza y se elimina esa vitamina del mapa, no hace falta recogerlas todas para ganar
 		eating = true;
 		eatingDistance = 25;
-		game->EmptyCell(posAct.GetY(), posAct.GetX());
+		game->EmptyCell(pos.GetY(), pos.GetX());
 	}
 }
 
 void Pacman::update() {
-	int nCols = game->GetNCols();
-	int nFils = game->GetNFils();
-	//el primer if checkea si se puede ir a la última posición indicada por la pulsacíon, si se puede se cambia la dirección, si no sigue yendo a la que estaba yendo
-
-	/*
-	if (game->NextCell(newDir, posAct))dir = newDir;
-	if (game->NextCell(dir, posAct)) {
-		//la suma de nCols y nFils dentro del parentesis es para que al ir en velocidad negativa y llegue al borde aparezca al otro lado tmb
-		posAct.SetX((posAct.GetX() + dir.GetX() + nCols) % nCols);
-		posAct.SetY((posAct.GetY() + dir.GetY() + nFils) % nFils);
-	}
-	*/
-	SDL_Rect rect;
-	rect.x = posAct.GetX();
-	rect.y = posAct.GetY();
-	//Esto está pinchado por código, cuando se haga polimorfismo se podrá hacer bien
-	rect.w = 28;
-	rect.h = 20;
+	
+	SDL_Rect destRect = getDestRect();
 
 	Point2D newPos;
-	if (game->tryMove(rect, newDir, newPos)){
+	if (game->tryMove(destRect, newDir, newPos)){
 		dir = newDir;
-		posAct = newPos;
+		pos = newPos;
 	}
-	else if(game->tryMove(rect, dir, newPos)){
-		posAct = newPos;
+	else if(game->tryMove(destRect, dir, newPos)){
+		pos = newPos;
 	}
 
 	

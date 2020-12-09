@@ -15,9 +15,14 @@ protected:
 
 
 	
-	void setItList(list<GameObject>::iterator& itPasar);//Este método hay que hacerle
-	GameCharacter(Game* gamePunt, int casillaHeight, int casillaWidth, Point2D posAct, Point2D posIniC, Vector2D dirC, Texture* textureC,  Point2D coorTextureC);
+	void setItList(list<GameObject>::iterator& itPasar) {};//Este método hay que hacerle
 
-	
+public:
+	GameCharacter(Point2D posAct, int casillaWidth, int casillaHeight, Game* gameC, Point2D posIniC, Vector2D dirC, Texture* textureC, Point2D coorTextureC);
+
+	virtual void render() const = 0;
+	virtual void update() = 0;
+
+	//virtual ~GameCharacter();
 };
 

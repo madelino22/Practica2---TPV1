@@ -166,7 +166,8 @@ void Game::destruccionesCambioNivel() {
 					//Creación del pacman
 
 					
-					pacman = new Pacman(mapCordsToSDLPoint(Point2D(y, x)), this, textures[1]);
+					//pacman = new Pacman(mapCordsToSDLPoint(Point2D(y, x)), this, textures[1]);
+					pacman = new Pacman(mapCordsToSDLPoint(Point2D(y, x)), mapa->casillaW, mapa->casillaH, this, mapCordsToSDLPoint(Point2D(y, x)), Vector2D(0, 1), textures[1], Point2D(0,10));
 					cout << mapCordsToSDLPoint(getPacManPosAct()).GetX() << "," << mapCordsToSDLPoint(getPacManPosAct()).GetY() << "\n";
 				}
 				else if (nCelda >= 5 && nCelda <= 8) {
@@ -206,7 +207,8 @@ void Game::destruccionesCambioNivel() {
 				if ((MapCell)nCelda == Food)comida++;
 				if (nCelda == 9) {
 					//Creación del pacman
-					pacman = new Pacman(Vector2D(y, x), this, textures[1]);
+					//pacman = new Pacman(Vector2D(y, x), this, textures[1]);
+					pacman = new Pacman(mapCordsToSDLPoint(Point2D(y, x)), mapa->casillaW, mapa->casillaH, this, mapCordsToSDLPoint(Point2D(y, x)), Vector2D(0, 1), textures[1], Point2D(0, 10));
 				}
 				else if (nCelda >= 5 && nCelda <= 8) {
 
