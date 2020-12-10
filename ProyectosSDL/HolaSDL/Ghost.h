@@ -7,7 +7,7 @@
 #include "Texture.h"
 #include "Vector2D.h"
 #include <cstdlib>
-
+#include "GameCharacter.h"
 using namespace std;
 
 using uint = unsigned int;
@@ -15,29 +15,25 @@ using uint = unsigned int;
 class Game;
 
 
-class Ghost
+class Ghost: public GameCharacter
 {
 
 private:
 
-	Point2D posAct, posIni;
-	Vector2D dir;
-	Game* game;
+	
 	int color;
 
 	bool comer(Point2D posPacMan);//de momento es bool pero no se usa
 	void morir();
 
-	Texture* texture = nullptr;
 public:
-	Ghost() {}
-	Ghost(Point2D pIni, Game* g, Texture* t, int c) :
-		posIni(pIni), posAct(pIni), game(g), texture(t), dir(Vector2D(-1, 0)), color(c) {}
-	~Ghost() {}
+	Ghost(Point2D posAct, int casillaWidth, int casillaHeight, Game* gameC, Point2D posIniC, Vector2D dirC, Texture* textureC, Point2D coorTextureC, int color);
+	//virtual ~Ghost() {}
 
-	void EscribePosicion(){ cout << posAct.GetY() << " " << posAct.GetX(); }
-	void render() const;
-	void update();
+	bool pacmanCollison();
+	void EscribePosicion(){ cout << pos.GetY() << " " << pos.GetX(); }
+	virtual void render() const;
+	virtual void update();
 	void handleEvents(const SDL_Event& event);
 };
 

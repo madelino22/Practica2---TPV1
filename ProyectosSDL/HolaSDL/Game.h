@@ -86,6 +86,10 @@ public:
 	//Este método es para indicar a los fantasmas si el pacman está comiendo, para que sepan si tienen que comerselo o ser comidos
 	bool pacmanEating() const { return pacman->GetEating(); };
 
+	SDL_Rect GetPacmanRect() const {
+		return pacman->getDestRect();
+	}
+
 	//lleva al pacman a la posición inicial y resta una vida, si no le quedan vidas se encarga de finalizar la partida
 	void pacManRespawn();
 	

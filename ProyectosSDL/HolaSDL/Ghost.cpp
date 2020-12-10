@@ -3,9 +3,19 @@
 
 
 
+Ghost::Ghost(Point2D posAct, int casillaWidth, int casillaHeight, Game* gameC, Point2D posIniC, Vector2D dirC, Texture* textureC, Point2D coorTextureC, int colorC):
+	GameCharacter(posAct, casillaWidth, casillaHeight, gameC, posIniC, dirC, textureC, coorTextureC), color(colorC)
+{
+
+}
+
+
+bool Ghost::pacmanCollison() {
+	return SDL_HasIntersection(&getDestRect(), &game->GetPacmanRect());
+}
 bool Ghost::comer(Point2D posPacMan) {
 	bool comido = false;
-	if (posPacMan == posAct) {
+	if (pacmanCollison()) {
 		if (!game->pacmanEating()) {
 			//Si los fantasmas son los que comen
 		    //invocan método pacman de reaparecer del pacman
@@ -25,40 +35,28 @@ bool Ghost::comer(Point2D posPacMan) {
 
 
 void Ghost::morir() {
-	posAct = posIni;
+	pos = posIni;
 }
 void Ghost::render() const {
 
-	int casillaH = WIN_HEIGHT / game->GetNFils();
-	int casillaW = WIN_WIDTH / game->GetNCols();
 
 	//creacion e inicializacion del rectángulo destino
-	SDL_Rect destRect;
-
-	destRect.x = posAct.GetX();
-	destRect.y = posAct.GetY();
-	destRect.h = casillaH;
-	destRect.w = casillaW;
+	SDL_Rect destRect = getDestRect();
 	texture->renderFrame(destRect, 0, color*2);
 	
 }
 
 //Aqui hay que hacer que decida de manera aleatoria donde ir
 void Ghost::update() {
-	int nCols = game->GetNCols();
-	int nFils = game->GetNFils();
+	
 	
 	Vector2D posibles[3];
 	Point2D casillasPosibles[3];
 	Vector2D dirPos = dir;
 	int tam = 0;
 
-	SDL_Rect rect;
-	rect.x = posAct.GetX();
-	rect.y = posAct.GetY();
-	//Esto está pinchado por código, cuando se haga polimorfismo se podrá hacer bien
-	rect.w = 28;
-	rect.h = 20;
+	SDL_Rect rect = getDestRect();;
+	
 
 
 	for (int x = 0; x < 3; x++) {
@@ -81,14 +79,14 @@ void Ghost::update() {
 		Point2D destino;
 	    dir.Invierte();
 		game->tryMove(rect, dir, destino);
-		posAct = destino;
+		pos = destino;
 	}
 	
 	else {
 		//selecciona al azar de entre una de las posibles
 		int nuevaDir = rand() % tam;
 		dir = posibles[nuevaDir];
-		posAct = casillasPosibles[nuevaDir];
+		pos = casillasPosibles[nuevaDir];
 	}
 	
 	

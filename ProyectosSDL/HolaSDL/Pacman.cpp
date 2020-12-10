@@ -3,7 +3,7 @@
 
 
 Pacman::Pacman(Point2D posAct, int casillaWidth, int casillaHeight, Game* gameC, Point2D posIniC, Vector2D dirC, Texture* textureC, Point2D coorTextureC)
-	: GameCharacter(posAct, casillaWidth, casillaHeight, gameC, posIniC, dirC, textureC, coorTexture), newDir(dirC), eating(false), eatingDistance(2000)
+	: GameCharacter(posAct, casillaWidth, casillaHeight, gameC, posIniC, dirC, textureC, coorTextureC), newDir(dirC), eating(false), eatingDistance(2000)
 {
 	
  }
@@ -11,8 +11,8 @@ void Pacman::render() const {
 	
 	SDL_Rect destRect = getDestRect();
 	//si está en modo caza tiene distinto sprite
-	if(!eating)texture->renderFrame(destRect, 0, 10);
-	else {texture->renderFrame(destRect, 0, 11);}
+	if(!eating)texture->renderFrame(destRect, coorTexture.GetY(), coorTexture.GetX());
+	else {texture->renderFrame(destRect, coorTexture.GetY(), coorTexture.GetX() + 1);}
 }
 
 

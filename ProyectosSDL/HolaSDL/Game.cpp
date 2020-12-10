@@ -172,7 +172,9 @@ void Game::destruccionesCambioNivel() {
 				}
 				else if (nCelda >= 5 && nCelda <= 8) {
 
-					ghosts.push_back(new Ghost(mapCordsToSDLPoint(Point2D(y, x)), this, textures[1], nCelda - 5));
+					//ghosts.push_back(new Ghost(mapCordsToSDLPoint(Point2D(y, x)), this, textures[1], nCelda - 5));
+					Point2D posIni = mapCordsToSDLPoint(Point2D(y, x));
+                    ghosts.push_back(new Ghost(posIni, mapa->casillaW, mapa->casillaH, this, posIni, Point2D(0, 1), textures[1], Point2D(0, (nCelda - 5) * 2), nCelda - 5));
 					ghosts.front()->EscribePosicion();
 					//Es la misma textura que el pacman ya que es una spritesheet
 					//En el método render ya se seleccionara cual es
@@ -212,7 +214,8 @@ void Game::destruccionesCambioNivel() {
 				}
 				else if (nCelda >= 5 && nCelda <= 8) {
 
-					ghosts.push_back(new Ghost(Vector2D(y, x), this, textures[1], nCelda - 5));
+					//ghosts.push_back(new Ghost(Vector2D(y, x), this, textures[1], nCelda - 5));
+					pacman = new Pacman(mapCordsToSDLPoint(Point2D(y, x)), mapa->casillaW, mapa->casillaH, this, mapCordsToSDLPoint(Point2D(y, x)), Vector2D(0, 1), textures[1], Point2D(0, 10));
 					//Es la misma textura que el pacman ya que es una spritesheet
 					//En el método render ya se seleccionara cual es
 				}
@@ -240,7 +243,7 @@ void Game::destruccionesCambioNivel() {
 int Game::GetNFils() const {
 
 	return mapa->fils;
-}
+                      }
 
 int Game::GetNCols() const {
 
@@ -276,6 +279,8 @@ bool Game::NextCell(const Vector2D& dir,const Vector2D& pos) const {
 
 	return celdaVacia;
 }
+
+
 
 
 
