@@ -7,6 +7,8 @@
 #include "checkML.h"
 #include "Texture.h"
 #include <iostream>
+#include "GameObject.h"
+
 
 
 
@@ -22,10 +24,9 @@ const int MARGENY = 0;
 
 
 enum MapCell{Empty, Wall, Food, Vitamins};
-class Game; // para que pueda guardar el juego y no haya inclusiones circulares
 
 
-class GameMap
+class GameMap: public GameObject
 {
 	friend class Game;
 private:
@@ -34,19 +35,19 @@ private:
 	Texture* textureWall = nullptr;
 	Texture* textureVit = nullptr;
 	Texture* textureFood = nullptr;
-	Game* game;
-	int casillaH;
-	int casillaW;
+
+	
     
 public:
-	GameMap(){};
-	GameMap(int fils, int cols, Game* game, Texture* textMap, Texture* textVit, Texture* textFood);
-	~GameMap();
+	GameMap(Point2D posC, int wC, int hC, Game* game, Texture* textMap, Texture* textVit, Texture* textFood, int nFils, int nCols);
+	//virtual ~GameMap();
 
 	bool IntersectsWall(SDL_Rect rect);
 	SDL_Rect getDestRect();
 
-	void render() const;
+	virtual void render() const;
+	//update no hce nada
+	virtual void update() {};
 
 };
 

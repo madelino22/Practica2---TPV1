@@ -149,9 +149,8 @@ void Game::destruccionesCambioNivel() {
 
 		cin >> fils >> cols;
 
-		mapa = new GameMap(fils, cols, this, textures[0], textures[2], textures[3]);
+		mapa = new GameMap(Point2D(0,0), WIN_WIDTH / cols, WIN_HEIGHT / fils, this, textures[0], textures[2], textures[3], fils, cols);
 
-		cout << "Altura de la casilla: " << mapa->casillaH << "   " << "Anchura de la casilla" << mapa->casillaW << "\n";
 		//para cada celda se lee su numero y se añade al array de GameMap
 		for (int y = 0; y < fils; y++) {
 			for (int x = 0; x < cols; x++) {
@@ -167,14 +166,14 @@ void Game::destruccionesCambioNivel() {
 
 					
 					//pacman = new Pacman(mapCordsToSDLPoint(Point2D(y, x)), this, textures[1]);
-					pacman = new Pacman(mapCordsToSDLPoint(Point2D(y, x)), mapa->casillaW, mapa->casillaH, this, mapCordsToSDLPoint(Point2D(y, x)), Vector2D(0, 1), textures[1], Point2D(0,10));
+					pacman = new Pacman(mapCordsToSDLPoint(Point2D(y, x)), mapa->width, mapa->height, this, mapCordsToSDLPoint(Point2D(y, x)), Vector2D(0, 1), textures[1], Point2D(0,10));
 					cout << mapCordsToSDLPoint(getPacManPosAct()).GetX() << "," << mapCordsToSDLPoint(getPacManPosAct()).GetY() << "\n";
 				}
 				else if (nCelda >= 5 && nCelda <= 8) {
 
 					//ghosts.push_back(new Ghost(mapCordsToSDLPoint(Point2D(y, x)), this, textures[1], nCelda - 5));
 					Point2D posIni = mapCordsToSDLPoint(Point2D(y, x));
-                    ghosts.push_back(new Ghost(posIni, mapa->casillaW, mapa->casillaH, this, posIni, Point2D(0, 1), textures[1], Point2D(0, (nCelda - 5) * 2), nCelda - 5));
+                    ghosts.push_back(new Ghost(posIni, mapa->width, mapa->height, this, posIni, Point2D(0, 1), textures[1], Point2D(0, (nCelda - 5) * 2), nCelda - 5));
 					ghosts.front()->EscribePosicion();
 					//Es la misma textura que el pacman ya que es una spritesheet
 					//En el método render ya se seleccionara cual es
@@ -196,7 +195,7 @@ void Game::destruccionesCambioNivel() {
 
 		cin >> fils >> cols;
 
-		mapa = new GameMap(fils, cols, this, textures[0], textures[2], textures[3]);
+		mapa = new GameMap(Point2D(0, 0), WIN_WIDTH / cols, WIN_HEIGHT / fils, this, textures[0], textures[2], textures[3], fils, cols);
 		//para cada celda se lee su numero y se añade al array de GameMap
 		for (int y = 0; y < fils; y++) {
 			for (int x = 0; x < cols; x++) {
@@ -210,12 +209,12 @@ void Game::destruccionesCambioNivel() {
 				if (nCelda == 9) {
 					//Creación del pacman
 					//pacman = new Pacman(Vector2D(y, x), this, textures[1]);
-					pacman = new Pacman(mapCordsToSDLPoint(Point2D(y, x)), mapa->casillaW, mapa->casillaH, this, mapCordsToSDLPoint(Point2D(y, x)), Vector2D(0, 1), textures[1], Point2D(0, 10));
+					pacman = new Pacman(mapCordsToSDLPoint(Point2D(y, x)), mapa->width, mapa->height, this, mapCordsToSDLPoint(Point2D(y, x)), Vector2D(0, 1), textures[1], Point2D(0, 10));
 				}
 				else if (nCelda >= 5 && nCelda <= 8) {
 
 					//ghosts.push_back(new Ghost(Vector2D(y, x), this, textures[1], nCelda - 5));
-					pacman = new Pacman(mapCordsToSDLPoint(Point2D(y, x)), mapa->casillaW, mapa->casillaH, this, mapCordsToSDLPoint(Point2D(y, x)), Vector2D(0, 1), textures[1], Point2D(0, 10));
+					pacman = new Pacman(mapCordsToSDLPoint(Point2D(y, x)), mapa->width, mapa->height, this, mapCordsToSDLPoint(Point2D(y, x)), Vector2D(0, 1), textures[1], Point2D(0, 10));
 					//Es la misma textura que el pacman ya que es una spritesheet
 					//En el método render ya se seleccionara cual es
 				}
