@@ -29,6 +29,8 @@ Game::Game() {
 	vidas = 3;
 	loadLevelFile("..\\Mapas\\level01.dat");
 }
+
+
 Game::~Game() {
 
 	delete pacman;
@@ -65,10 +67,15 @@ void Game::run() {
 	
 }
 void Game::update() {
-
+	
+	for (GameObject* o : objetos) o->update();
+	
+	/*
 	pacman->update();
 	
 	for(Ghost* g : ghosts)g->update();
+	*/
+	
 
 
 	//meter las vidas también
@@ -80,6 +87,7 @@ void Game::update() {
 			cout << "Has ganado!\n";
 
 		}
+
 		else if (ganado && nivel < 4) {
 			ganado = false;
 			nivel++;
@@ -121,6 +129,7 @@ void Game::handleEvents() {
 }
 
 void Game::destruccionesCambioNivel() {
+	//En este método hay que hacer tambien la destruccion de los nodos de la lsita de objetos
 	delete pacman;
 	pacman = nullptr;
 
@@ -150,7 +159,7 @@ void Game::destruccionesCambioNivel() {
 		cin >> fils >> cols;
 
 		mapa = new GameMap(Point2D(0,0), WIN_WIDTH / cols, WIN_HEIGHT / fils, this, textures[0], textures[2], textures[3], fils, cols);
-
+		objetos.push_back(mapa);
 		//para cada celda se lee su numero y se añade al array de GameMap
 		for (int y = 0; y < fils; y++) {
 			for (int x = 0; x < cols; x++) {
@@ -167,13 +176,16 @@ void Game::destruccionesCambioNivel() {
 					
 					//pacman = new Pacman(mapCordsToSDLPoint(Point2D(y, x)), this, textures[1]);
 					pacman = new Pacman(mapCordsToSDLPoint(Point2D(y, x)), mapa->width, mapa->height, this, mapCordsToSDLPoint(Point2D(y, x)), Vector2D(0, 1), textures[1], Point2D(0,10));
-					cout << mapCordsToSDLPoint(getPacManPosAct()).GetX() << "," << mapCordsToSDLPoint(getPacManPosAct()).GetY() << "\n";
+					objetos.push_back(pacman);
 				}
 				else if (nCelda >= 5 && nCelda <= 8) {
 
 					//ghosts.push_back(new Ghost(mapCordsToSDLPoint(Point2D(y, x)), this, textures[1], nCelda - 5));
 					Point2D posIni = mapCordsToSDLPoint(Point2D(y, x));
+					//mete al final de la lista de fantasmas el fantasma que toca
                     ghosts.push_back(new Ghost(posIni, mapa->width, mapa->height, this, posIni, Point2D(0, 1), textures[1], Point2D(0, (nCelda - 5) * 2), nCelda - 5));
+					//busca al final de la lista de fantasmas el último introducido, que justo es el que se acab de introducir y lo añade ala lista objetos, como son punteros los ods no hay problema
+					objetos.push_back(ghosts.back());
 					ghosts.front()->EscribePosicion();
 					//Es la misma textura que el pacman ya que es una spritesheet
 					//En el método render ya se seleccionara cual es

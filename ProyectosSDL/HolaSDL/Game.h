@@ -41,6 +41,7 @@ private:
 	Pacman* pacman = nullptr;
 	GameMap* mapa = nullptr;
 	list<Ghost*> ghosts;
+	list<GameObject*> objetos;
 	bool exit = false;
 	
 	array<Texture*, NUM_TEXTURES> textures;
