@@ -22,12 +22,39 @@ Game::Game() {
 		textures[i]->load(texturas.file[i], texturas.fils[i], texturas.cols[i]);
 	}
 
-	nivel = 1;
-	//valor inicial de las variables de la partida,
-	//comida se rellena al construir el mapa en leeMapa
-	comida = 0;
-	vidas = 3;
-	loadLevelFile("..\\Mapas\\level01.dat");
+
+
+
+	string cargar;
+	cout << "jugar(p) o cargar partida(c)?\n";
+	cin >> cargar;
+	while (cargar != "p" && cargar != "c") {
+		cout << "Introducir valor correcto (p) o (c)\n";
+		cin >> cargar;
+	}
+
+	if (cargar == "p") {
+		nivel = 1;
+		//valor inicial de las variables de la partida,
+		//comida se rellena al construir el mapa en leeMapa
+		comida = 0;
+		vidas = 3;
+		loadLevelFile("..\\Mapas\\level01.dat");
+	}
+	else if (cargar == "c") {
+		//Cargar partida
+		string numero;
+		cout << "número de la partida a cargar?\n";
+
+		//hacer que cargue partida
+
+
+	}
+
+
+	pausado = false;
+
+	
 }
 
 
@@ -54,14 +81,32 @@ void Game::run() {
 	startTime = SDL_GetTicks();
 
 	while (!exit) { 
-		handleEvents();
-		frameTime = SDL_GetTicks() - startTime;
-		if (frameTime >= FRAME_RATE) {
-			update();
-			startTime = SDL_GetTicks();
+		if (!pausado) {
+			handleEvents();
+			frameTime = SDL_GetTicks() - startTime;
+			if (frameTime >= FRAME_RATE) {
+				update();
+				startTime = SDL_GetTicks();
+			}
+
+			render();
+		}
+		else {
+			SDL_RenderClear(renderer);
+			cout << "Introducir número de ficher do guardado\n";
+
+			std::string numGuardado;
+
+			cin >> numGuardado;
+
+			std::ofstream archivoDeGuardado;
+
+			archivoDeGuardado.open("..\\partidasGuardadas\\partidaGuardada" + numGuardado + ".txt");
+
+			//metodo save(in)
+			pausado = false;
 		}
 		
-		render();
 	}
 
 	
@@ -123,6 +168,9 @@ void Game::handleEvents() {
 	SDL_Event event;
 	while (SDL_PollEvent(&event) && !exit) {
 		if (event.type == SDL_QUIT) exit = true;
+		else if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_s) {
+			pausado = true;
+		}
 		else pacman->handleEvents(event);
 		
 	}

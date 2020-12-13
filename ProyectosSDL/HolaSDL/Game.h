@@ -50,7 +50,7 @@ private:
 
 	int vidas;
 	int comida;
-	bool ganado;
+	bool ganado, pausado;
 
 	void LeeMapa();
 	void loadLevelFile(string file);
