@@ -40,8 +40,10 @@ private:
     
 public:
 	GameMap(Point2D posC, int wC, int hC, Game* game, Texture* textMap, Texture* textVit, Texture* textFood, int nFils, int nCols);
+	GameMap(ifstream& file, Game* gameC);
 	//virtual ~GameMap();
 
+	void saveToFile(ofstream& file);
 	bool IntersectsWall(SDL_Rect rect);
 	SDL_Rect getDestRect();
 

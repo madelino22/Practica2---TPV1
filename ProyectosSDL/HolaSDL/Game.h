@@ -106,6 +106,7 @@ public:
 		mapa->celdasMapa[coords.GetY()][coords.GetX()] = Empty;
 	};
 
+	Texture* getTexture(string name);
 
 	void save();
 	void loadSavedGame();

@@ -92,28 +92,50 @@ void Game::save() {
 	archivoDeGuardado << nivel << " " << comida << " " << vidas << "\n";
 
 	//guardar los datos del mapa
-	archivoDeGuardado << mapa->fils << " " << mapa->cols << "\n";
-	for (int y = 0; y < mapa->fils; y++) {
-		for (int x = 0; x < mapa->cols; x++) {
-			archivoDeGuardado << (int)mapa->celdasMapa[y][x] << " ";
-		}
-		archivoDeGuardado << "\n";
-	}
+	mapa->saveToFile(archivoDeGuardado);
 
 	archivoDeGuardado.close();
 
 }
 
 void Game::loadSavedGame() {
-	cout << "introducir numero de la partida guardada";
+	
+	/*cout << "introducir numero de la partida guardada";
 	int num;
 	cin >> num;
-
+	*/
 	ifstream archivoLeer;
 	//archivoLeer.open("..\\partidasGuardadas\\partidaGuardada" + num + ".txt");
 	archivoLeer.open("..\\partidasGuardadas\\partidaGuardadaPrueba.txt");
 
+	//Primero están los 4 fantasmas y el pacman
+	for (int x = 0; x < 5; x++) {
+		int tipo;
+		archivoLeer >> tipo;
+		
+		if(tipo == 1)
+		{//si es algun fantasma
+			ghosts.push_back(new Ghost(archivoLeer, this));
+			//busca al final de la lista de fantasmas el último introducido, que justo es el que se acab de introducir y lo añade ala lista objetos, como son punteros los ods no hay problema
+			objetos.push_back(ghosts.back());
+		}
+		else if (tipo == 0) {
+			//si es el pacman
+			pacman = new Pacman(archivoLeer, this);
+			objetos.push_back(pacman);
+		}
+		
 
+	}
+
+	
+
+	//ahora los datos de game
+	archivoLeer >> nivel >> comida >> vidas;
+
+	//por último el mapa
+	mapa = new GameMap(archivoLeer, this);
+	objetos.push_back(mapa);
 }
 
 void Game::run() {
@@ -417,4 +439,15 @@ void Game::pacManRespawn() {
 	cout << "Vidas: " << vidas << "\n";
 }
 
+
+Texture* Game::getTexture(string name) {
+	if (name == "character")
+		return textures[1];
+	else if (name == "wall")
+		return textures[0];
+	else if (name == "vitamin")
+		return textures[2];
+	else if (name == "food")
+		return textures[3];
+}
 

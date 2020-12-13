@@ -3,10 +3,16 @@
 
 
 Pacman::Pacman(Point2D posAct, int casillaWidth, int casillaHeight, Game* gameC, Point2D posIniC, Vector2D dirC, Texture* textureC, Point2D coorTextureC)
-	: GameCharacter(posAct, casillaWidth, casillaHeight, gameC, posIniC, dirC, textureC, coorTextureC), newDir(dirC), eating(false), eatingDistance(2000)
-{
-	
+	: GameCharacter(posAct, casillaWidth, casillaHeight, gameC, posIniC, dirC, textureC, coorTextureC), newDir(dirC), eating(false), eatingDistance(2000){
  }
+
+Pacman::Pacman(ifstream& file, Game* gameC): GameCharacter(file, gameC){
+	int newDirX, newDirY;
+	file >> newDirY >> newDirX;
+	newDir.SetY(newDirY);
+	newDir.SetX(newDirX);
+
+}
 void Pacman::render() const {
 	
 	SDL_Rect destRect = getDestRect();

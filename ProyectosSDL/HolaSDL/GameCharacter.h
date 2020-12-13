@@ -21,7 +21,7 @@ protected:
 public:
 	
 	GameCharacter(Point2D posAct, int casillaWidth, int casillaHeight, Game* gameC, Point2D posIniC, Vector2D dirC, Texture* textureC, Point2D coorTextureC);
-	GameCharacter(ifstream& file);
+	GameCharacter(ifstream& file, Game* gameC);
 
 	virtual void saveToFile(std::ofstream& file);
 	virtual void render() const = 0;

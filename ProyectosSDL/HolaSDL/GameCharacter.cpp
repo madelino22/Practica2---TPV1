@@ -7,32 +7,32 @@ GameCharacter::GameCharacter(Point2D posAct, int casillaWidth, int casillaHeight
 	setItList(it);
 }
 
-/*
-GameCharacter::GameCharacter(ifstream& file, Game* gameC, Texture* textureC, Point2D coorTextureC) {
-	int posY, posX, posIniY, posIniX, dirY, dirX , w, h;
 
-	Point2D posC, posIniC;
-	Vector2D dirC;
+GameCharacter::GameCharacter(ifstream& file, Game* gameC): GameObject(Point2D(0,0), 0, 0, gameC) {
+	
+	int posY, posX, posIniY, posIniX, dirY, dirX , coorY, coorX;
 
-	posC.SetY(posY);
-	posC.SetX(posX);
+	file >> posY >> posX >> width >> height >> posIniY >> posIniX >> dirY >> dirX >> coorY >> coorX;
 
-	posIniC.SetY(posIniY);
-	posIniC.SetX(posIniX);
+	texture = game->getTexture("character");
 
-	dirC.SetY(dirY);
-	dirC.SetX(dirX);
+	pos.SetY(posY);
+	pos.SetX(posX);
 
-	GameObject(posC, w, h, gameC);
-	file >> posY >> posX >> w >> h >> posIniY >> posIniX >> dirY >> dirX;
+	posIni.SetY(posIniY);
+	posIni.SetX(posIniX);
 
+	dir.SetY(dirY);
+	dir.SetX(dirX);
 
-
+	coorTexture.SetY(coorY);
+	coorTexture.SetX(coorX);
 
 }
-*/
+
 
 
 void GameCharacter::saveToFile(std::ofstream& archivoDeGuardado) {
-	archivoDeGuardado << pos.GetY() << " " << pos.GetX() << " " << width << " " << height << " " << posIni.GetY() << " " << posIni.GetX() << " " << dir.GetY() << " " << dir.GetX() << " ";
+	archivoDeGuardado << pos.GetY() << " " << pos.GetX() << " " << width << " " << height << " " << posIni.GetY() << " " << posIni.GetX()
+		<< " " << dir.GetY() << " " << dir.GetX() << " " << coorTexture.GetY() << " " << coorTexture.GetX() << " " ;
 }

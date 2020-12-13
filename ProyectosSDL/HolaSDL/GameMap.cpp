@@ -33,6 +33,34 @@ GameMap::GameMap(Point2D posC, int wC, int hC, Game* gameC, Texture* textMap, Te
 
 }
 
+GameMap::GameMap(ifstream& file, Game* gameC): GameObject(Point2D(0, 0), 0, 0, gameC) {
+	int posY, posX;
+
+	file >> posY >> posX >> width >> height >> fils >> cols;
+
+	pos.SetY(posY);
+	pos.SetX(posX);
+
+	celdasMapa = new MapCell * [fils];
+
+	for (int y = 0; y < fils; y++) {
+		celdasMapa[y] = new MapCell[cols];
+	}
+
+
+	for (int y = 0; y < fils; y++) {
+		for (int x = 0; x < cols; x++) {
+			int nCelda;
+			file >> nCelda;
+			celdasMapa[y][x] = (MapCell)nCelda;
+		}
+	}
+
+	textureWall = game->getTexture("wall");
+	textureFood = game->getTexture("food");
+	textureVit = game->getTexture("vitamin");
+}
+
 /*
 GameMap::~GameMap() {
 
@@ -50,6 +78,22 @@ GameMap::~GameMap() {
 }
 */
 
+
+void GameMap::saveToFile(ofstream& file) {
+
+
+	file << pos.GetY() << " " << pos.GetX() << " " << width << " " << height << " " << fils << " " << cols << "\n";
+
+
+	for (int y = 0; y < fils; y++) {
+		for (int x = 0; x < cols; x++) {
+			file << (int) celdasMapa[y][x] << " ";
+		}
+		file << "\n";
+	}
+
+
+}
 
 //Este metodo hay qu eleminarle ya que se hereda de gameObject
 SDL_Rect GameMap::getDestRect() {

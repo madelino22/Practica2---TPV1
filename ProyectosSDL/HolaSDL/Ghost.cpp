@@ -4,11 +4,14 @@
 
 
 Ghost::Ghost(Point2D posAct, int casillaWidth, int casillaHeight, Game* gameC, Point2D posIniC, Vector2D dirC, Texture* textureC, Point2D coorTextureC, int colorC):
-	GameCharacter(posAct, casillaWidth, casillaHeight, gameC, posIniC, dirC, textureC, coorTextureC), color(colorC)
-{
+	GameCharacter(posAct, casillaWidth, casillaHeight, gameC, posIniC, dirC, textureC, coorTextureC), color(colorC){
 
 }
 
+
+Ghost::Ghost(ifstream& file, Game* gameC): GameCharacter(file, gameC) {
+	file >> color;
+}
 
 bool Ghost::pacmanCollison() {
 	return SDL_HasIntersection(&getDestRect(), &game->GetPacmanRect());

@@ -26,6 +26,7 @@ private:
 
 public:
 	Pacman(Point2D posAct, int casillaWidth, int casillaHeight, Game* gameC, Point2D posIniC, Vector2D dirC, Texture* textureC, Point2D coorTextureC);
+	Pacman(ifstream& file, Game* gameC);
 	//virtual ~Pacman() {}
 
 	Point2D GetPosAct() const { return pos; }
