@@ -37,7 +37,7 @@ public:
 	void SetDir(int x, int y) { dir.SetX(x); dir.SetY(y); }
 	void SetNewDir(int x, int y) { newDir.SetX(x); newDir.SetY(y); }
 
-
+	virtual void saveToFile(std::ofstream& file);
 
 
 	virtual void render() const;

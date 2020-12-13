@@ -81,3 +81,9 @@ void Pacman::handleEvents(const SDL_Event& event) {
 		}
 	}
 }
+
+void Pacman::saveToFile(std::ofstream& file) {
+	file << 0 << " ";//este cero es para saber que es el pacman
+	GameCharacter::saveToFile(file);
+	file << newDir.GetY() << " " << newDir.GetX() << "\n";
+}

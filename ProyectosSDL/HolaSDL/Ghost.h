@@ -32,6 +32,9 @@ public:
 
 	bool pacmanCollison();
 	void EscribePosicion(){ cout << pos.GetY() << " " << pos.GetX(); }
+
+	virtual void saveToFile(std::ofstream& file);
+
 	virtual void render() const;
 	virtual void update();
 	void handleEvents(const SDL_Event& event);

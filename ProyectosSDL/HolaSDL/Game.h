@@ -11,6 +11,7 @@
 #include "Ghost.h"
 #include <array>
 #include <list>
+#include <string>
 
 
 using namespace std;
@@ -104,6 +105,10 @@ public:
 		Point2D coords = SDLPointToMapCoords(Point2D(y, x));
 		mapa->celdasMapa[coords.GetY()][coords.GetX()] = Empty;
 	};
+
+
+	void save();
+	void loadSavedGame();
 
 	void run();
 	void render() const;

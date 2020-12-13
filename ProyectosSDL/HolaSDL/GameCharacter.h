@@ -2,6 +2,7 @@
 #include "GameObject.h"
 #include "Texture.h"
 #include <list>
+#include <iostream>
 
 
 class GameCharacter: public GameObject
@@ -18,8 +19,11 @@ protected:
 	void setItList(list<GameObject>::iterator& itPasar) {};//Este método hay que hacerle
 
 public:
+	
 	GameCharacter(Point2D posAct, int casillaWidth, int casillaHeight, Game* gameC, Point2D posIniC, Vector2D dirC, Texture* textureC, Point2D coorTextureC);
+	GameCharacter(ifstream& file);
 
+	virtual void saveToFile(std::ofstream& file);
 	virtual void render() const = 0;
 	virtual void update() = 0;
 

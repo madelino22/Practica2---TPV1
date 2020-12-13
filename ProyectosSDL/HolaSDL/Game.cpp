@@ -43,12 +43,7 @@ Game::Game() {
 	}
 	else if (cargar == "c") {
 		//Cargar partida
-		string numero;
-		cout << "número de la partida a cargar?\n";
-
-		//hacer que cargue partida
-
-
+		loadSavedGame();
 	}
 
 
@@ -76,6 +71,51 @@ Game::~Game() {
 }
 
 
+
+void Game::save() {
+	SDL_RenderClear(renderer);//limpiar pantalla
+
+	//cout << "Introducir número de fichero guardado\n";
+	//std::string numGuardado;
+	//cin >> numGuardado;
+
+	std::ofstream archivoDeGuardado;
+	//archivoDeGuardado.open("..\\partidasGuardadas\\partidaGuardada" + numGuardado + ".txt");
+	archivoDeGuardado.open("..\\partidasGuardadas\\partidaGuardadaPrueba.txt");
+
+	for (GameObject* o : objetos) {
+		GameCharacter* c = dynamic_cast<GameCharacter*>(o);
+		if (c != nullptr) c->saveToFile(archivoDeGuardado);
+	}
+
+	//ahora los datos de game
+	archivoDeGuardado << nivel << " " << comida << " " << vidas << "\n";
+
+	//guardar los datos del mapa
+	archivoDeGuardado << mapa->fils << " " << mapa->cols << "\n";
+	for (int y = 0; y < mapa->fils; y++) {
+		for (int x = 0; x < mapa->cols; x++) {
+			archivoDeGuardado << (int)mapa->celdasMapa[y][x] << " ";
+		}
+		archivoDeGuardado << "\n";
+	}
+
+	archivoDeGuardado.close();
+
+}
+
+void Game::loadSavedGame() {
+	cout << "introducir numero de la partida guardada";
+	int num;
+	cin >> num;
+
+	ifstream archivoLeer;
+	//archivoLeer.open("..\\partidasGuardadas\\partidaGuardada" + num + ".txt");
+	archivoLeer.open("..\\partidasGuardadas\\partidaGuardadaPrueba.txt");
+
+
+}
+
 void Game::run() {
 	uint32_t startTime, frameTime;
 	startTime = SDL_GetTicks();
@@ -92,18 +132,7 @@ void Game::run() {
 			render();
 		}
 		else {
-			SDL_RenderClear(renderer);
-			cout << "Introducir número de ficher do guardado\n";
-
-			std::string numGuardado;
-
-			cin >> numGuardado;
-
-			std::ofstream archivoDeGuardado;
-
-			archivoDeGuardado.open("..\\partidasGuardadas\\partidaGuardada" + numGuardado + ".txt");
-
-			//metodo save(in)
+			save();
 			pausado = false;
 		}
 		
@@ -194,7 +223,7 @@ void Game::destruccionesCambioNivel() {
 }
 	void Game::loadLevelFile(string file)
 	{
-
+		
 		cout << "Cargado con nuevo metodo \n";
 		std::ifstream in(file);
 		if (!in.is_open()) throw(Error("No se encuentra el fichero"));
