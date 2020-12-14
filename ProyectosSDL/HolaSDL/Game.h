@@ -47,6 +47,7 @@ private:
 	
 	array<Texture*, NUM_TEXTURES> textures;
 
+	int objetosCharacter;
 	int nivel;
 
 	int vidas;

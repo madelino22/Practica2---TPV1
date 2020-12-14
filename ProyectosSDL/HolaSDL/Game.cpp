@@ -33,6 +33,8 @@ Game::Game() {
 		cin >> cargar;
 	}
 
+	objetosCharacter = 0;
+
 	if (cargar == "p") {
 		nivel = 1;
 		//valor inicial de las variables de la partida,
@@ -79,6 +81,7 @@ void Game::save() {
 	std::ofstream archivoDeGuardado;
 	//archivoDeGuardado.open("..\\partidasGuardadas\\partidaGuardada" + numGuardado + ".txt");
 	archivoDeGuardado.open("..\\partidasGuardadas\\partidaGuardadaPrueba.txt");
+	archivoDeGuardado << objetosCharacter << "\n";
 
 	for (GameObject* o : objetos) {
 		GameCharacter* c = dynamic_cast<GameCharacter*>(o);
@@ -104,20 +107,27 @@ void Game::loadSavedGame() {
 	ifstream archivoLeer;
 	//archivoLeer.open("..\\partidasGuardadas\\partidaGuardada" + num + ".txt");
 	archivoLeer.open("..\\partidasGuardadas\\partidaGuardadaPrueba.txt");
+	
+	
 
+	//varaible para saber cuantos objetos de tipo character hay en la partida guardada 
+	int objetosCh;
+	archivoLeer >> objetosCh;
 	//Primero están los 4 fantasmas y el pacman
-	for (int x = 0; x < 5; x++) {
+	for (int x = 0; x < objetosCh; x++) {
 		int tipo;
 		archivoLeer >> tipo;
 		
 		if(tipo == 1)
 		{//si es algun fantasma
+			objetosCharacter++;
 			ghosts.push_back(new Ghost(archivoLeer, this));
 			//busca al final de la lista de fantasmas el último introducido, que justo es el que se acab de introducir y lo añade ala lista objetos, como son punteros los ods no hay problema
 			objetos.push_back(ghosts.back());
 		}
 		else if (tipo == 0) {
 			//si es el pacman
+			objetosCharacter++;
 			pacman = new Pacman(archivoLeer, this);
 			objetos.push_back(pacman);
 		}
@@ -260,13 +270,14 @@ void Game::destruccionesCambioNivel() {
 				if (nCelda == 9) {
 					//Creación del pacman
 
-					
+					objetosCharacter++;
 					//pacman = new Pacman(mapCordsToSDLPoint(Point2D(y, x)), this, textures[1]);
 					pacman = new Pacman(mapCordsToSDLPoint(Point2D(y, x)), mapa->width, mapa->height, this, mapCordsToSDLPoint(Point2D(y, x)), Vector2D(0, 1), textures[1], Point2D(0,10));
 					objetos.push_back(pacman);
 				}
 				else if (nCelda >= 5 && nCelda <= 8) {
 
+					objetosCharacter++;
 					//ghosts.push_back(new Ghost(mapCordsToSDLPoint(Point2D(y, x)), this, textures[1], nCelda - 5));
 					Point2D posIni = mapCordsToSDLPoint(Point2D(y, x));
 					//mete al final de la lista de fantasmas el fantasma que toca

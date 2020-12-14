@@ -31,7 +31,7 @@ public:
 	Ghost(ifstream& file, Game* gameC);
 	virtual ~Ghost() {}
 
-	bool pacmanCollison();
+    bool pacmanCollison();
 	void EscribePosicion(){ cout << pos.GetY() << " " << pos.GetX(); }
 
 	virtual void saveToFile(std::ofstream& file);
