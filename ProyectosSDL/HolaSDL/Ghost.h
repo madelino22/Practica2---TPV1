@@ -20,7 +20,7 @@ class Ghost: public GameCharacter
 
 private:
 
-	
+	int capMov;
 	int color;
 
 	bool comer(Point2D posPacMan);//de momento es bool pero no se usa

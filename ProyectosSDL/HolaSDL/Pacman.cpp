@@ -32,7 +32,7 @@ void Pacman::comerAlimento() {
 	else if (game->contenidoCelda(pos.GetY(), pos.GetX()) == Vitamins) {
 		//si es vitamina se pone en modo caza y se elimina esa vitamina del mapa, no hace falta recogerlas todas para ganar
 		eating = true;
-		eatingDistance = 25;
+		eatingDistance = 600;
 		game->EmptyCell(pos.GetY(), pos.GetX());
 	}
 }
