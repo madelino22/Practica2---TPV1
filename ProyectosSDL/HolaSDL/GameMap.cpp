@@ -61,7 +61,7 @@ GameMap::GameMap(ifstream& file, Game* gameC): GameObject(Point2D(0, 0), 0, 0, g
 	textureVit = game->getTexture("vitamin");
 }
 
-/*
+ 
 GameMap::~GameMap() {
 
 	//no se necesita borrar las texturas ya que son punteros que luego los borrará game
@@ -76,7 +76,7 @@ GameMap::~GameMap() {
 	delete[] celdasMapa;
 
 }
-*/
+
 
 
 void GameMap::saveToFile(ofstream& file) {

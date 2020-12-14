@@ -20,7 +20,7 @@ public:
 	virtual SDL_Rect getDestRect() const;
 	
 	//No crea memoria dinámica por lo que no debería borrar nada
-	//virtual ~GameObject();
+	virtual ~GameObject() {};
 
 };
 

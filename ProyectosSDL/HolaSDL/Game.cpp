@@ -55,14 +55,11 @@ Game::Game() {
 
 Game::~Game() {
 
-	delete pacman;
-	delete mapa;//invoca al destructor de mapa y todo lo que lleva consigo
+	for (GameObject* o : objetos) delete o;
 
-	//for (Ghost* g : ghosts) delete g;
-	for (list<Ghost*>::iterator it = ghosts.begin(); it != ghosts.end(); ++it) {
-		delete *it;
-		//el erase avanza solo
-	}
+	objetos.clear();
+	ghosts.clear();
+	
 	for (uint i = 0; i < NUM_TEXTURES; i++) delete textures[i];
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
@@ -166,11 +163,7 @@ void Game::update() {
 	
 	for (GameObject* o : objetos) o->update();
 	
-	/*
-	pacman->update();
 	
-	for(Ghost* g : ghosts)g->update();
-	*/
 	
 
 
@@ -229,17 +222,12 @@ void Game::handleEvents() {
 
 void Game::destruccionesCambioNivel() {
 	//En este método hay que hacer tambien la destruccion de los nodos de la lsita de objetos
-	delete pacman;
-	pacman = nullptr;
+	for (GameObject* o : objetos) o->~GameObject();
 
-	delete mapa;//invoca al destructor de mapa y todo lo que lleva consigo
+	pacman = nullptr;
 	mapa = nullptr;
 
-	//for (Ghost* g : ghosts) delete g;
-	for (list<Ghost*>::iterator it = ghosts.begin(); it != ghosts.end(); ++it) {
-		delete* it;
-		//el erase avanza solo
-	}
+	objetos.clear();
 	ghosts.clear();
 
 }

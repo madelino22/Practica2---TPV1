@@ -32,6 +32,10 @@ GameCharacter::GameCharacter(ifstream& file, Game* gameC): GameObject(Point2D(0,
 
 
 
+GameCharacter::~GameCharacter() {
+
+}
+
 void GameCharacter::saveToFile(std::ofstream& archivoDeGuardado) {
 	archivoDeGuardado << pos.GetY() << " " << pos.GetX() << " " << width << " " << height << " " << posIni.GetY() << " " << posIni.GetX()
 		<< " " << dir.GetY() << " " << dir.GetX() << " " << coorTexture.GetY() << " " << coorTexture.GetX() << " " ;
