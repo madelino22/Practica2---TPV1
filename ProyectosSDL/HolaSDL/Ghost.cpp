@@ -119,4 +119,5 @@ void Ghost::update() {
 void Ghost::saveToFile(std::ofstream& file) {
 	file << 1 << " ";//este cero es para saber que es un fantasma
 	GameCharacter::saveToFile(file);
+	file << "\n";
  }

@@ -92,7 +92,7 @@ void GameMap::saveToFile(ofstream& file) {
 		file << "\n";
 	}
 
-
+	file << "\n";
 }
 
 //Este metodo hay qu eleminarle ya que se hereda de gameObject

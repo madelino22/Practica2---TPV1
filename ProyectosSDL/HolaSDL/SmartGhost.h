@@ -2,9 +2,9 @@
 #include "Ghost.h"
 class SmartGhost: public Ghost
 {
-	const int tiempoChild = 100;
-	const int tiempoAdult = 300;
-	const int tiempoDead = 350;
+	const int tiempoChild = 400;
+	const int tiempoAdult = 1500;
+	const int tiempoDead = 1600;
 	const int tiempoQuerentine = 100;
 private:
 

@@ -89,8 +89,22 @@ void Game::save() {
 	
 
 	std::ofstream archivoDeGuardado;
+
+
+	
+
+
+
 	//archivoDeGuardado.open("..\\partidasGuardadas\\partidaGuardada" + numGuardado + ".txt");
 	archivoDeGuardado.open("..\\partidasGuardadas\\partidaGuardadaPrueba.txt");
+
+
+	//ahora los datos de game
+	archivoDeGuardado << nivel << " " << comida << " " << vidas << "\n";
+
+	//guardar los datos del mapa
+	mapa->saveToFile(archivoDeGuardado);
+
 	archivoDeGuardado << objetosCharacter << "\n";
 
 	for (GameObject* o : objetos) {
@@ -98,11 +112,7 @@ void Game::save() {
 		if (c != nullptr) c->saveToFile(archivoDeGuardado);
 	}
 
-	//ahora los datos de game
-	archivoDeGuardado << nivel << " " << comida << " " << vidas << "\n";
-
-	//guardar los datos del mapa
-	mapa->saveToFile(archivoDeGuardado);
+	
 
 	archivoDeGuardado.close();
 
@@ -121,12 +131,17 @@ void Game::loadSavedGame() {
 	//archivoLeer.open("..\\partidasGuardadas\\partidaGuardada" + num + ".txt");
 	archivoLeer.open("..\\partidasGuardadas\\partidaGuardadaPrueba.txt");
 	
-	
+	//cargar los datos de game
+	archivoLeer >> nivel >> comida >> vidas;
+
+	//cargar el mapa
+	mapa = new GameMap(archivoLeer, this);
+	objetos.push_back(mapa);
 
 	//varaible para saber cuantos objetos de tipo character hay en la partida guardada 
 	int objetosCh;
 	archivoLeer >> objetosCh;
-	//Primero están los 4 fantasmas y el pacman
+	//Por último están los fantasmas y el pacman
 	for (int x = 0; x < objetosCh; x++) {
 		int tipo;
 		archivoLeer >> tipo;
@@ -144,6 +159,8 @@ void Game::loadSavedGame() {
 			objetos.push_back(pacman);
 		}
 		else if (tipo == 2) {
+			int tipoGhost;
+			archivoLeer >> tipoGhost;
 			objetosCharacter++;
 			Ghost* g = new SmartGhost(archivoLeer, this);
 			storeGhost(g);
@@ -154,12 +171,7 @@ void Game::loadSavedGame() {
 
 	
 
-	//ahora los datos de game
-	archivoLeer >> nivel >> comida >> vidas;
-
-	//por último el mapa
-	mapa = new GameMap(archivoLeer, this);
-	objetos.push_back(mapa);
+	
 }
 
 void Game::run() {
@@ -190,14 +202,16 @@ void Game::update() {
 	
 	for (GameObject* o : objetos) o->update();
 	
-	//fantasmasChocan();
+	fantasmasChocan();
 	
 	for (auto g : objectsToErase) {
 		
 		cout << "hola";
+		Ghost* c = dynamic_cast<Ghost*>(*g);
 		delete *g;
 		objetos.erase(g);
-		
+		ghosts.remove(c);
+		objetosCharacter--;
 	}
 	
 	objectsToErase.clear();
