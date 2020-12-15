@@ -69,7 +69,12 @@ Game::~Game() {
 	
 }
 
+void Game::storeGhost(Ghost* g) {
+	list<GameObject*>::iterator it = objetos.insert(objetos.end(), g);
+	g->setItList(it);
+	ghosts.push_back(g);
 
+}
 
 void Game::save() {
 	SDL_RenderClear(renderer);//limpiar pantalla
@@ -129,15 +134,19 @@ void Game::loadSavedGame() {
 		if(tipo == 1)
 		{//si es algun fantasma
 			objetosCharacter++;
-			ghosts.push_back(new Ghost(archivoLeer, this));
-			//busca al final de la lista de fantasmas el último introducido, que justo es el que se acab de introducir y lo añade ala lista objetos, como son punteros los ods no hay problema
-			objetos.push_back(ghosts.back());
+			Ghost* g = new Ghost(archivoLeer, this);
+			storeGhost(g);
 		}
 		else if (tipo == 0) {
 			//si es el pacman
 			objetosCharacter++;
 			pacman = new Pacman(archivoLeer, this);
 			objetos.push_back(pacman);
+		}
+		else if (tipo == 2) {
+			objetosCharacter++;
+			Ghost* g = new SmartGhost(archivoLeer, this);
+			storeGhost(g);
 		}
 		
 
@@ -183,15 +192,15 @@ void Game::update() {
 	
 	//fantasmasChocan();
 	
-	for (Ghost* g : objectsToErase) {
+	for (auto g : objectsToErase) {
 		
 		cout << "hola";
-		delete g;
-		objetos.remove(g);
-		ghosts.remove(g);
+		delete *g;
+		objetos.erase(g);
 		
 	}
 	
+	objectsToErase.clear();
 
 	//meter las vidas también
 	if (comida <= 0) {
@@ -293,20 +302,14 @@ void Game::destruccionesCambioNivel() {
 
 					objetosCharacter++;
 					Point2D posIni = mapCordsToSDLPoint(Point2D(y, x));
-					//mete al final de la lista de fantasmas el fantasma que toca
-                    ghosts.push_back(new Ghost(posIni, mapa->width, mapa->height, this, posIni, Point2D(0, 1), textures[1], Point2D(0, (nCelda - 5) * 2)));
-					//busca al final de la lista de fantasmas el último introducido, que justo es el que se acab de introducir y lo añade ala lista objetos, como son punteros los ods no hay problema
-					objetos.push_back(ghosts.back());
-					ghosts.front()->EscribePosicion();
-					//Es la misma textura que el pacman ya que es una spritesheet
-					//En el método render ya se seleccionara cual es
+                    Ghost* g = new Ghost(posIni, mapa->width, mapa->height, this, posIni, Point2D(0, 1), textures[1], Point2D(0, (nCelda - 5) * 2));
+					storeGhost(g);
 				}
 				 else if (nCelda == 4) {
 					objetosCharacter++;
 					Point2D posIni = mapCordsToSDLPoint(Point2D(y, x));
-					ghosts.push_back(new SmartGhost(posIni, mapa->width, mapa->height, this, posIni, Point2D(0, 1), textures[1], Point2D(0, 8), 0));
-					objetos.push_back(ghosts.back());
-					ghosts.front()->EscribePosicion();
+					Ghost* g = new SmartGhost(posIni, mapa->width, mapa->height, this, posIni, Point2D(0, 1), textures[1], Point2D(0, 8), 0);
+					storeGhost(g);
 
 				}
 				 
@@ -317,55 +320,7 @@ void Game::destruccionesCambioNivel() {
 	}
 
 
-	void Game::LeeMapa() {
-		cout << "Se usa leemapa";
-		std::ifstream in("..\\Mapas\\level03.dat");
-		if (!in.is_open()) throw(Error("No se encuentra el fichero"));
-
-		auto cinbuf = std::cin.rdbuf(in.rdbuf());
-
-		int fils, cols;
-
-		cin >> fils >> cols;
-
-		mapa = new GameMap(Point2D(0, 0), WIN_WIDTH / cols, WIN_HEIGHT / fils, this, textures[0], textures[2], textures[3], fils, cols);
-		//para cada celda se lee su numero y se añade al array de GameMap
-		for (int y = 0; y < fils; y++) {
-			for (int x = 0; x < cols; x++) {
-				int nCelda;
-				cin >> nCelda;
-				mapa->celdasMapa[y][x] = (MapCell)nCelda;
-
-				//si se añade una comida se suma una al contador de la comida para llevar la cuenta en la partida
-				// de cuandtas hay al principio y poder ir eliminando
-				if ((MapCell)nCelda == Food)comida++;
-				if (nCelda == 9) {
-					//Creación del pacman
-					//pacman = new Pacman(Vector2D(y, x), this, textures[1]);
-					pacman = new Pacman(mapCordsToSDLPoint(Point2D(y, x)), mapa->width, mapa->height, this, mapCordsToSDLPoint(Point2D(y, x)), Vector2D(0, 1), textures[1], Point2D(0, 10));
-				}
-				else if (nCelda >= 5 && nCelda <= 8) {
-
-					//ghosts.push_back(new Ghost(Vector2D(y, x), this, textures[1], nCelda - 5));
-					pacman = new Pacman(mapCordsToSDLPoint(Point2D(y, x)), mapa->width, mapa->height, this, mapCordsToSDLPoint(Point2D(y, x)), Vector2D(0, 1), textures[1], Point2D(0, 10));
-					//Es la misma textura que el pacman ya que es una spritesheet
-					//En el método render ya se seleccionara cual es
-				}
-
-			}
-		}
-	}
-
 	
-    //Este bucle es de debug, para ver en la consola si se ha leido bien de fichero
-	//estos x y van cambiados ya que en los bucles van del revés
-	/*for (int y = 0; y < fils; y++) {
-		for (int x = 0; x < cols; x++) {
-			cout << mapa->celdasMapa[y][x] << " ";
-		}
-		cout << "\n";
-	}
-	*/
 	
 
 
@@ -525,8 +480,8 @@ void Game::fantasmasChocan() {
 
 
 
-void Game::eraseGhost(Ghost* g) {
+void Game::eraseGhost(list<GameObject*>::iterator itList) {
 	
-	objectsToErase.push_back(g);
+	objectsToErase.push_back(itList);
 	
 }

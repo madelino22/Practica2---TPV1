@@ -44,7 +44,7 @@ private:
 	GameMap* mapa = nullptr;
 	list<Ghost*> ghosts;
 	list<GameObject*> objetos;
-	list<Ghost*> objectsToErase;
+	list<list<GameObject*>::iterator> objectsToErase;
 	bool exit = false;
 	
 	array<Texture*, NUM_TEXTURES> textures;
@@ -80,7 +80,7 @@ public:
 		return mapa->celdasMapa[coordenadas.GetY()][coordenadas.GetX()];
 	}
 
-	void eraseGhost(Ghost* g);
+	void eraseGhost(list<GameObject*>::iterator itList);
 
 	//Para que los fantasmas sepan donde está el pacman para saber si hay que comerselo o no
 	Point2D getPacManPosAct() const { return pacman->GetPosAct(); }
@@ -120,5 +120,7 @@ public:
 	void handleEvents();
 	void update();
 
+
+	void storeGhost(Ghost* g);
 };
 

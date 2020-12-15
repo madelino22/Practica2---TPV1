@@ -16,7 +16,7 @@ void SmartGhost::handleState() {
 
 
 	if (edad >= tiempoDead)
-		game->eraseGhost(this);
+		game->eraseGhost(itList);
 	else if (edad >= tiempoAdult) state = Dead;
 	else if (edad >= tiempoChild) state = Adult;
     else state = Child;
