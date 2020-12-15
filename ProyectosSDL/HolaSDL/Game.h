@@ -12,6 +12,7 @@
 #include <array>
 #include <list>
 #include <string>
+#include "SmartGhost.h"
 
 
 using namespace std;
@@ -43,6 +44,7 @@ private:
 	GameMap* mapa = nullptr;
 	list<Ghost*> ghosts;
 	list<GameObject*> objetos;
+	list<Ghost*> objectsToErase;
 	bool exit = false;
 	
 	array<Texture*, NUM_TEXTURES> textures;
@@ -57,6 +59,7 @@ private:
 	void LeeMapa();
 	void loadLevelFile(string file);
 	void destruccionesCambioNivel();
+	void fantasmasChocan();
 
 
 public:
@@ -77,7 +80,7 @@ public:
 		return mapa->celdasMapa[coordenadas.GetY()][coordenadas.GetX()];
 	}
 
-
+	void eraseGhost(Ghost* g);
 
 	//Para que los fantasmas sepan donde está el pacman para saber si hay que comerselo o no
 	Point2D getPacManPosAct() const { return pacman->GetPosAct(); }

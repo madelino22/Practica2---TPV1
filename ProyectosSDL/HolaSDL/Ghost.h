@@ -18,19 +18,21 @@ class Game;
 class Ghost: public GameCharacter
 {
 
-private:
+protected:
 
 	int capMov;
-	int color;
+	int cooldown;
 
 	bool comer(Point2D posPacMan);//de momento es bool pero no se usa
 	void morir();
 
 public:
-	Ghost(Point2D posAct, int casillaWidth, int casillaHeight, Game* gameC, Point2D posIniC, Vector2D dirC, Texture* textureC, Point2D coorTextureC, int color);
+	Ghost(Point2D posAct, int casillaWidth, int casillaHeight, Game* gameC, Point2D posIniC, Vector2D dirC, Texture* textureC, Point2D coorTextureC);
 	Ghost(ifstream& file, Game* gameC);
 	virtual ~Ghost() {}
 
+	int getCooldown() const { return cooldown; };
+	void setCooldown(int x) { cooldown = x; };
     bool pacmanCollison();
 	void EscribePosicion(){ cout << pos.GetY() << " " << pos.GetX(); }
 

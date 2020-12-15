@@ -74,9 +74,14 @@ Game::~Game() {
 void Game::save() {
 	SDL_RenderClear(renderer);//limpiar pantalla
 
-	//cout << "Introducir número de fichero guardado\n";
-	//std::string numGuardado;
-	//cin >> numGuardado;
+	/*
+	cout << "Introducir número de fichero guardado\n";
+	std::string numGuardado;
+	getline(cin, numGuardado);
+	cin >> numGuardado;
+	cout << numGuardado;
+	*/
+	
 
 	std::ofstream archivoDeGuardado;
 	//archivoDeGuardado.open("..\\partidasGuardadas\\partidaGuardada" + numGuardado + ".txt");
@@ -100,10 +105,13 @@ void Game::save() {
 
 void Game::loadSavedGame() {
 	
-	/*cout << "introducir numero de la partida guardada";
+	/*
+	* cout << "introducir numero de la partida guardada";
 	int num;
 	cin >> num;
 	*/
+	
+	
 	ifstream archivoLeer;
 	//archivoLeer.open("..\\partidasGuardadas\\partidaGuardada" + num + ".txt");
 	archivoLeer.open("..\\partidasGuardadas\\partidaGuardadaPrueba.txt");
@@ -173,9 +181,17 @@ void Game::update() {
 	
 	for (GameObject* o : objetos) o->update();
 	
+	//fantasmasChocan();
 	
+	for (Ghost* g : objectsToErase) {
+		
+		cout << "hola";
+		delete g;
+		objetos.remove(g);
+		ghosts.remove(g);
+		
+	}
 	
-
 
 	//meter las vidas también
 	if (comida <= 0) {
@@ -210,9 +226,7 @@ void Game::render() const {
 
 	SDL_RenderClear(renderer);
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-	mapa->render();
-	pacman->render();
-	for (Ghost* g : ghosts) {g->render();}
+	for (GameObject* o : objetos) o->render();
 	SDL_RenderPresent(renderer);
 
 }
@@ -278,16 +292,25 @@ void Game::destruccionesCambioNivel() {
 				else if (nCelda >= 5 && nCelda <= 8) {
 
 					objetosCharacter++;
-					//ghosts.push_back(new Ghost(mapCordsToSDLPoint(Point2D(y, x)), this, textures[1], nCelda - 5));
 					Point2D posIni = mapCordsToSDLPoint(Point2D(y, x));
 					//mete al final de la lista de fantasmas el fantasma que toca
-                    ghosts.push_back(new Ghost(posIni, mapa->width, mapa->height, this, posIni, Point2D(0, 1), textures[1], Point2D(0, (nCelda - 5) * 2), nCelda - 5));
+                    ghosts.push_back(new Ghost(posIni, mapa->width, mapa->height, this, posIni, Point2D(0, 1), textures[1], Point2D(0, (nCelda - 5) * 2)));
 					//busca al final de la lista de fantasmas el último introducido, que justo es el que se acab de introducir y lo añade ala lista objetos, como son punteros los ods no hay problema
 					objetos.push_back(ghosts.back());
 					ghosts.front()->EscribePosicion();
 					//Es la misma textura que el pacman ya que es una spritesheet
 					//En el método render ya se seleccionara cual es
 				}
+				 else if (nCelda == 4) {
+					objetosCharacter++;
+					Point2D posIni = mapCordsToSDLPoint(Point2D(y, x));
+					ghosts.push_back(new SmartGhost(posIni, mapa->width, mapa->height, this, posIni, Point2D(0, 1), textures[1], Point2D(0, 8), 0));
+					objetos.push_back(ghosts.back());
+					ghosts.front()->EscribePosicion();
+
+				}
+				 
+				
 
 			}
 		}
@@ -296,7 +319,7 @@ void Game::destruccionesCambioNivel() {
 
 	void Game::LeeMapa() {
 		cout << "Se usa leemapa";
-		std::ifstream in("..\\Mapas\\level01.dat");
+		std::ifstream in("..\\Mapas\\level03.dat");
 		if (!in.is_open()) throw(Error("No se encuentra el fichero"));
 
 		auto cinbuf = std::cin.rdbuf(in.rdbuf());
@@ -414,7 +437,7 @@ bool Game::tryMove(const SDL_Rect& rect, Vector2D dir, Point2D& newPos) {
 		newPos.SetY(mapRect.y + avanceEnY);
 	}
 	else if (dir.GetY() < 0 && newPos.GetY() <= mapRect.y) {
-		newPos.SetX(mapRect.y + mapRect.h - avanceEnY);
+		newPos.SetY(mapRect.y + mapRect.h - avanceEnY);
 	}
 
 	SDL_Rect newRect = { newPos.GetX(), newPos.GetY(), rect.w, rect.h };
@@ -450,3 +473,60 @@ Texture* Game::getTexture(string name) {
 		return textures[3];
 }
 
+
+
+void Game::fantasmasChocan() {
+
+	//Se comprueba las colisiones de los fonatasmas entre ellos
+	for (Ghost* g1 : ghosts) {
+		//si es uno inteligente puede qeu se reproduzca
+		SmartGhost* c1 = dynamic_cast<SmartGhost*>(g1);
+		if (c1 != nullptr) {
+			for (Ghost* g2 : ghosts) {
+				//para evitar comprobar la colision con él mismo
+				if (g1 != g2) {
+					SDL_Rect rect1 = g1->getDestRect();
+					SDL_Rect rect2 = g2->getDestRect();
+
+					//si ha colisionado con otro fantasma, y además los dos tienene el cooldown a menos de 0, ed decir pueden rerpoducirse los dos, se reproducen
+					//Además el cooldown coincide con el timpo que tardan en hacaerse adultos por lo que uno pequeño no podrá reproducirse
+					if (SDL_HasIntersection(&rect1, &rect2) && g1->getCooldown() <= 0 && g2->getCooldown() <= 0) {
+						g1->setCooldown(500);
+						g2->setCooldown(500);
+
+						objetosCharacter++;
+						SmartGhost* c2 = dynamic_cast<SmartGhost*>(g2);
+						//si choca con un smartghost
+						if (c2 != nullptr) {
+							Point2D posIni = Point2D(rect1.y, rect1.x);
+							ghosts.push_back(new SmartGhost(posIni, mapa->width, mapa->height, this, posIni, Point2D(0, 1), textures[1], Point2D(0, 8), 0));
+							objetos.push_back(ghosts.back());
+							ghosts.front()->EscribePosicion();
+						}
+						//si el fantasma con el que choca era uno normal
+						else {
+							Point2D posIni = Point2D(rect1.y, rect1.x);
+							//mete al final de la lista de fantasmas el fantasma que toca
+							ghosts.push_back(new Ghost(posIni, mapa->width, mapa->height, this, posIni, Point2D(0, 1), textures[1], Point2D(0, 0)));
+							//busca al final de la lista de fantasmas el último introducido, que justo es el que se acab de introducir y lo añade ala lista objetos, como son punteros los ods no hay problema
+							objetos.push_back(ghosts.back());
+							ghosts.front()->EscribePosicion();
+						}
+
+					}
+				}
+				
+			
+			}
+		}
+	}
+
+}
+
+
+
+void Game::eraseGhost(Ghost* g) {
+	
+	objectsToErase.push_back(g);
+	
+}

@@ -3,19 +3,21 @@
 
 
 
-Ghost::Ghost(Point2D posAct, int casillaWidth, int casillaHeight, Game* gameC, Point2D posIniC, Vector2D dirC, Texture* textureC, Point2D coorTextureC, int colorC):
-	GameCharacter(posAct, casillaWidth, casillaHeight, gameC, posIniC, dirC, textureC, coorTextureC), color(colorC){
-
+Ghost::Ghost(Point2D posAct, int casillaWidth, int casillaHeight, Game* gameC, Point2D posIniC, Vector2D dirC, Texture* textureC, Point2D coorTextureC):
+	GameCharacter(posAct, casillaWidth, casillaHeight, gameC, posIniC, dirC, textureC, coorTextureC){
+	cooldown = 500;
+	
 }
 
 
 Ghost::Ghost(ifstream& file, Game* gameC): GameCharacter(file, gameC) {
-	file >> color;
+	
 }
 
 bool Ghost::pacmanCollison() {
 	return SDL_HasIntersection(&getDestRect(), &game->GetPacmanRect());
 }
+
 bool Ghost::comer(Point2D posPacMan) {
 	bool comido = false;
 	if (pacmanCollison()) {
@@ -45,13 +47,13 @@ void Ghost::render() const {
 
 	//creacion e inicializacion del rectángulo destino
 	SDL_Rect destRect = getDestRect();
-	texture->renderFrame(destRect, 0, color*2);
+	texture->renderFrame(destRect, 0, coorTexture.GetX());
 	
 }
 
 //Aqui hay que hacer que decida de manera aleatoria donde ir
 void Ghost::update() {
-
+	cooldown--;
 
 	SDL_Rect rect = getDestRect();
 	if (capMov < 0)
@@ -115,7 +117,6 @@ void Ghost::update() {
 
 
 void Ghost::saveToFile(std::ofstream& file) {
-	file << 1 << " ";//este cero es para saber que es el pacman
+	file << 1 << " ";//este cero es para saber que es un fantasma
 	GameCharacter::saveToFile(file);
-	file << color << "\n";
  }

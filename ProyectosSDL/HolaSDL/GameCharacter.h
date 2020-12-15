@@ -12,7 +12,7 @@ protected:
 	Vector2D dir;
 	Texture* texture = nullptr;
 	Point2D coorTexture;
-	list<GameObject>::iterator it;
+	list<GameObject>::iterator itList;
 
 
 	
