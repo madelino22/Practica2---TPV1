@@ -397,19 +397,19 @@ bool Game::tryMove(const SDL_Rect& rect, Vector2D dir, Point2D& newPos) {
 
 
 
-	if (dir.GetX() > 0 && (newPos.GetX() + rect.w) >= mapRect.x + mapRect.w) {
-		newPos.SetX(mapRect.x + avanceEnX);
+	if (dir.GetX() > 0 && (newPos.GetX() + rect.w) >= mapRect.x + mapa->casillaW * mapa->cols) {
+		newPos.SetX(mapRect.x + avanceEnX + rect.w);
 	}
 	else if (dir.GetX() < 0 && newPos.GetX() <= mapRect.x) {
-		newPos.SetX(mapRect.x + mapRect.w - avanceEnX);
+		newPos.SetX(mapRect.x + mapRect.w - avanceEnX - rect.w);
 	}
-	else if (dir.GetY() > 0 && (newPos.GetY() + rect.h) >= mapRect.y + mapRect.h) {
+	else if (dir.GetY() > 0 && (newPos.GetY() + rect.h) >= mapRect.y + mapa->casillaH * mapa->fils) {
 		newPos.SetY(mapRect.y + avanceEnY +rect.h);
 	}
 	else if (dir.GetY() < 0 && newPos.GetY() <= mapRect.y) {
-		newPos.SetY(mapRect.y + mapRect.h - avanceEnY - rect.h);
+		newPos.SetY(mapRect.y + mapRect.h - avanceEnY - rect.h - 30 );
 	}
-
+	
 	SDL_Rect newRect = { newPos.GetX(), newPos.GetY(), rect.w, rect.h };
 
 	return !(mapa->IntersectsWall(newRect));
