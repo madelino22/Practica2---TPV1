@@ -41,6 +41,8 @@ void SmartGhost::update() {
 	if (edad > tiempoAdult) {
 		//muere
 	}
+	//Este método checkea si este fantasma colisiona con otros y además si lo hace y se deben reproducir se encarga de la reproducción
+	game->checkColisionFantasmas(this);
 }
 
 void SmartGhost::render() const{

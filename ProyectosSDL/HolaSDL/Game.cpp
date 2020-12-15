@@ -202,7 +202,7 @@ void Game::update() {
 	
 	for (GameObject* o : objetos) o->update();
 	
-	fantasmasChocan();
+	//fantasmasChocan();
 	
 	for (auto g : objectsToErase) {
 		
@@ -447,6 +447,48 @@ Texture* Game::getTexture(string name) {
 		return textures[3];
 }
 
+
+//Este método checkea si el fantasma g1 colisiona con otros y además si lo hace y se deben reproducir se encarga de la reproducción
+void Game::checkColisionFantasmas(Ghost* g1) {
+	
+		//si es uno inteligente puede qeu se reproduzca
+		SmartGhost* c1 = dynamic_cast<SmartGhost*>(g1);
+		if (c1 != nullptr) {
+			for (Ghost* g2 : ghosts) {
+				//para evitar comprobar la colision con él mismo
+				if (g1 != g2) {
+					SDL_Rect rect1 = g1->getDestRect();
+					SDL_Rect rect2 = g2->getDestRect();
+
+					//si ha colisionado con otro fantasma, y además los dos tienene el cooldown a menos de 0, ed decir pueden rerpoducirse los dos, se reproducen
+					//Además el cooldown coincide con el timpo que tardan en hacaerse adultos por lo que uno pequeño no podrá reproducirse
+					if (SDL_HasIntersection(&rect1, &rect2) && g1->getCooldown() <= 0 && g2->getCooldown() <= 0) {
+						g1->setCooldown(500);
+						g2->setCooldown(500);
+
+						objetosCharacter++;
+						SmartGhost* c2 = dynamic_cast<SmartGhost*>(g2);
+						//si choca con un smartghost
+						if (c2 != nullptr) {
+							Point2D posIni = Point2D(rect1.y, rect1.x);
+							Ghost* g = new SmartGhost(posIni, mapa->casillaW, mapa->casillaH, this, posIni, Point2D(0, 1), textures[1], Point2D(0, 8), 0);
+							storeGhost(g);
+						}
+						//si el fantasma con el que choca era uno normal
+						else {
+							Point2D posIni = Point2D(rect1.y, rect1.x);
+							//mete al final de la lista de fantasmas el fantasma que toca
+							Ghost* g = new Ghost(posIni, mapa->casillaW, mapa->casillaH, this, posIni, Point2D(0, 1), textures[1], Point2D(0, 0));
+							storeGhost(g);
+						}
+
+					}
+				}
+
+
+			}
+		}
+	}
 
 
 void Game::fantasmasChocan() {

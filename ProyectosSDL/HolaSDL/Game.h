@@ -59,7 +59,7 @@ private:
 	void LeeMapa();
 	void loadLevelFile(string file);
 	void destruccionesCambioNivel();
-	void fantasmasChocan();
+	
 
 
 public:
@@ -120,7 +120,8 @@ public:
 	void handleEvents();
 	void update();
 
-
+	void fantasmasChocan();
 	void storeGhost(Ghost* g);
+	void checkColisionFantasmas(Ghost* g);
 };
 
