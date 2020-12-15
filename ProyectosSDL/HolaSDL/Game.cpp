@@ -397,6 +397,10 @@ bool Game::tryMove(const SDL_Rect& rect, Vector2D dir, Point2D& newPos) {
 
 
 
+
+	//en vez de poner que cuando se salgan del limite de la pantalla se muevan al otro límite, está hehco que cuando lleguen
+	//al limite del mapa que foman las casillas (mapRect.x + mapa->casillaW * mapa->cols) en este caso el eje x, se muevan, ya que si no se hace así
+	//surge un error
 	if (dir.GetX() > 0 && (newPos.GetX() + rect.w) >= mapRect.x + mapa->casillaW * mapa->cols) {
 		newPos.SetX(mapRect.x + avanceEnX + rect.w);
 	}
@@ -469,18 +473,15 @@ void Game::fantasmasChocan() {
 						//si choca con un smartghost
 						if (c2 != nullptr) {
 							Point2D posIni = Point2D(rect1.y, rect1.x);
-							ghosts.push_back(new SmartGhost(posIni, mapa->casillaW, mapa->casillaH, this, posIni, Point2D(0, 1), textures[1], Point2D(0, 8), 0));
-							objetos.push_back(ghosts.back());
-							ghosts.front()->EscribePosicion();
+							Ghost* g = new SmartGhost(posIni, mapa->casillaW, mapa->casillaH, this, posIni, Point2D(0, 1), textures[1], Point2D(0, 8), 0);
+							storeGhost(g);
 						}
 						//si el fantasma con el que choca era uno normal
 						else {
 							Point2D posIni = Point2D(rect1.y, rect1.x);
 							//mete al final de la lista de fantasmas el fantasma que toca
-							ghosts.push_back(new Ghost(posIni, mapa->casillaW, mapa->casillaH, this, posIni, Point2D(0, 1), textures[1], Point2D(0, 0)));
-							//busca al final de la lista de fantasmas el último introducido, que justo es el que se acab de introducir y lo añade ala lista objetos, como son punteros los ods no hay problema
-							objetos.push_back(ghosts.back());
-							ghosts.front()->EscribePosicion();
+							Ghost* g = new Ghost(posIni, mapa->casillaW, mapa->casillaH, this, posIni, Point2D(0, 1), textures[1], Point2D(0, 0));
+							storeGhost(g);
 						}
 
 					}
