@@ -29,7 +29,8 @@ GameMap::GameMap(Point2D posC, int wC, int hC, Game* gameC, Texture* textMap, Te
 		}
 	}
 
-	
+	casillaH = hC / nFils;
+	casillaW = wC / nCols;
 
 }
 
@@ -59,6 +60,9 @@ GameMap::GameMap(ifstream& file, Game* gameC): GameObject(Point2D(0, 0), 0, 0, g
 	textureWall = game->getTexture("wall");
 	textureFood = game->getTexture("food");
 	textureVit = game->getTexture("vitamin");
+
+	casillaH = height / fils;
+	casillaW = width / cols;
 }
 
  
@@ -101,8 +105,8 @@ SDL_Rect GameMap::getDestRect() {
 	//esto sería el margen si hibiera desde la izquierda
 	rectMap.x = MARGENX;
 	rectMap.y = MARGENY;
-	rectMap.w = cols * width;
-	rectMap.h = fils * height;
+	rectMap.w = width;
+	rectMap.h = height;
 
 	return rectMap;
 }
@@ -115,10 +119,10 @@ void GameMap::render() const {
 			MapCell tipo = celdasMapa[x][y];
 
 			SDL_Rect destRect;
-			destRect.x = y * width;
-			destRect.y = x * height;
-			destRect.h = height;
-			destRect.w = width;
+			destRect.x = y * casillaW;
+			destRect.y = x * casillaH;
+			destRect.h = casillaH;
+			destRect.w = casillaW;
 
 			if (tipo == Wall) {
 				textureWall->renderFrame(destRect, 0, 0);
@@ -137,7 +141,7 @@ bool GameMap::IntersectsWall(SDL_Rect rect) {
 	
 	
 	Point2D topLeft =  game->SDLPointToMapCoords(Point2D(rect.y, rect.x));
-	Point2D botRight = game->SDLPointToMapCoords(Point2D(rect.y + height-1, rect.x + width-1));
+	Point2D botRight = game->SDLPointToMapCoords(Point2D(rect.y + casillaH-1, rect.x + casillaW-1));
 
 	for (int y = topLeft.GetY(); y <= botRight.GetY(); y++) {
 		for (int x = topLeft.GetX(); x <= botRight.GetX(); x++) {

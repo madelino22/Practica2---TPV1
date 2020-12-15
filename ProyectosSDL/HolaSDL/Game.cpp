@@ -41,7 +41,7 @@ Game::Game() {
 		//comida se rellena al construir el mapa en leeMapa
 		comida = 0;
 		vidas = 3;
-		loadLevelFile("..\\Mapas\\level01.dat");
+		loadLevelFile("..\\Mapas\\level02.dat");
 	}
 	else if (cargar == "c") {
 		//Cargar partida
@@ -271,9 +271,10 @@ void Game::destruccionesCambioNivel() {
 	//En este método hay que hacer tambien la destruccion de los nodos de la lsita de objetos
 	for (GameObject* o : objetos) o->~GameObject();
 
+	objetosCharacter = 0;
 	pacman = nullptr;
 	mapa = nullptr;
-
+	
 	objetos.clear();
 	ghosts.clear();
 
@@ -292,7 +293,7 @@ void Game::destruccionesCambioNivel() {
 
 		cin >> fils >> cols;
 
-		mapa = new GameMap(Point2D(0,0), WIN_WIDTH / cols, WIN_HEIGHT / fils, this, textures[0], textures[2], textures[3], fils, cols);
+		mapa = new GameMap(Point2D(0,0), WIN_WIDTH, WIN_HEIGHT, this, textures[0], textures[2], textures[3], fils, cols);
 		objetos.push_back(mapa);
 		//para cada celda se lee su numero y se añade al array de GameMap
 		for (int y = 0; y < fils; y++) {
@@ -309,20 +310,20 @@ void Game::destruccionesCambioNivel() {
 
 					objetosCharacter++;
 					//pacman = new Pacman(mapCordsToSDLPoint(Point2D(y, x)), this, textures[1]);
-					pacman = new Pacman(mapCordsToSDLPoint(Point2D(y, x)), mapa->width, mapa->height, this, mapCordsToSDLPoint(Point2D(y, x)), Vector2D(0, 1), textures[1], Point2D(0,10));
+					pacman = new Pacman(mapCordsToSDLPoint(Point2D(y, x)), mapa->casillaW, mapa->casillaH, this, mapCordsToSDLPoint(Point2D(y, x)), Vector2D(0, 1), textures[1], Point2D(0,10));
 					objetos.push_back(pacman);
 				}
 				else if (nCelda >= 5 && nCelda <= 8) {
 
 					objetosCharacter++;
 					Point2D posIni = mapCordsToSDLPoint(Point2D(y, x));
-                    Ghost* g = new Ghost(posIni, mapa->width, mapa->height, this, posIni, Point2D(0, 1), textures[1], Point2D(0, (nCelda - 5) * 2));
+                    Ghost* g = new Ghost(posIni, mapa->casillaW, mapa->casillaH, this, posIni, Point2D(0, 1), textures[1], Point2D(0, (nCelda - 5) * 2));
 					storeGhost(g);
 				}
 				 else if (nCelda == 4) {
 					objetosCharacter++;
 					Point2D posIni = mapCordsToSDLPoint(Point2D(y, x));
-					Ghost* g = new SmartGhost(posIni, mapa->width, mapa->height, this, posIni, Point2D(0, 1), textures[1], Point2D(0, 8), 0);
+					Ghost* g = new SmartGhost(posIni, mapa->casillaW, mapa->casillaH, this, posIni, Point2D(0, 1), textures[1], Point2D(0, 8), 0);
 					storeGhost(g);
 
 				}
@@ -403,10 +404,10 @@ bool Game::tryMove(const SDL_Rect& rect, Vector2D dir, Point2D& newPos) {
 		newPos.SetX(mapRect.x + mapRect.w - avanceEnX);
 	}
 	else if (dir.GetY() > 0 && (newPos.GetY() + rect.h) >= mapRect.y + mapRect.h) {
-		newPos.SetY(mapRect.y + avanceEnY);
+		newPos.SetY(mapRect.y + avanceEnY +rect.h);
 	}
 	else if (dir.GetY() < 0 && newPos.GetY() <= mapRect.y) {
-		newPos.SetY(mapRect.y + mapRect.h - avanceEnY);
+		newPos.SetY(mapRect.y + mapRect.h - avanceEnY - rect.h);
 	}
 
 	SDL_Rect newRect = { newPos.GetX(), newPos.GetY(), rect.w, rect.h };
@@ -468,7 +469,7 @@ void Game::fantasmasChocan() {
 						//si choca con un smartghost
 						if (c2 != nullptr) {
 							Point2D posIni = Point2D(rect1.y, rect1.x);
-							ghosts.push_back(new SmartGhost(posIni, mapa->width, mapa->height, this, posIni, Point2D(0, 1), textures[1], Point2D(0, 8), 0));
+							ghosts.push_back(new SmartGhost(posIni, mapa->casillaW, mapa->casillaH, this, posIni, Point2D(0, 1), textures[1], Point2D(0, 8), 0));
 							objetos.push_back(ghosts.back());
 							ghosts.front()->EscribePosicion();
 						}
@@ -476,7 +477,7 @@ void Game::fantasmasChocan() {
 						else {
 							Point2D posIni = Point2D(rect1.y, rect1.x);
 							//mete al final de la lista de fantasmas el fantasma que toca
-							ghosts.push_back(new Ghost(posIni, mapa->width, mapa->height, this, posIni, Point2D(0, 1), textures[1], Point2D(0, 0)));
+							ghosts.push_back(new Ghost(posIni, mapa->casillaW, mapa->casillaH, this, posIni, Point2D(0, 1), textures[1], Point2D(0, 0)));
 							//busca al final de la lista de fantasmas el último introducido, que justo es el que se acab de introducir y lo añade ala lista objetos, como son punteros los ods no hay problema
 							objetos.push_back(ghosts.back());
 							ghosts.front()->EscribePosicion();

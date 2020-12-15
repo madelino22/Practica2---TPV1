@@ -35,6 +35,7 @@ private:
 	Texture* textureWall = nullptr;
 	Texture* textureVit = nullptr;
 	Texture* textureFood = nullptr;
+	int casillaH, casillaW;
 
 	
     
