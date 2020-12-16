@@ -41,7 +41,7 @@ Game::Game() {
 		//comida se rellena al construir el mapa en leeMapa
 		comida = 0;
 		vidas = 3;
-		loadLevelFile("..\\Mapas\\level02.dat");
+		loadLevelFile("..\\Mapas\\level01.dat");
 	}
 	else if (cargar == "c") {
 		//Cargar partida
