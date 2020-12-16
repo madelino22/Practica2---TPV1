@@ -31,19 +31,90 @@ void SmartGhost::saveToFile(std::ofstream& file) {
 	file << edad << "\n";
 }
 
+
+void SmartGhost::movimiento(int posRelPacmanY, int posRelPacmanX) {
+	Point2D newPos;
+	int x = posRelPacmanX;
+	int y = posRelPacmanY;
+	if (!game->pacmanEating()) {
+		if (x < 0 && game->tryMove(getDestRect(), Point2D(0, -1), newPos)) //Está a la izquierda
+		{
+			pos = newPos;
+		}
+		else if (x > 0 && game->tryMove(getDestRect(), Point2D(0, 1), newPos)) //Está a la derecha
+		{
+			pos = newPos;
+		}
+
+		if (y < 0 && game->tryMove(getDestRect(), Point2D(-1, 0), newPos)) //Está arriba
+		{
+			pos = newPos;
+		}
+		else if (y > 0 && game->tryMove(getDestRect(), Point2D(1, 0), newPos)) //Está abajo
+		{
+			pos = newPos;
+		}
+	}
+	else {
+		if (x < 0 && game->tryMove(getDestRect(), Point2D(0, 1), newPos)) //Está a la izquierda
+		{
+			pos = newPos;
+		}
+		else if (x > 0 && game->tryMove(getDestRect(), Point2D(0, -1), newPos)) {
+			pos = newPos;
+		}
+
+		if (y < 0 && game->tryMove(getDestRect(), Point2D(1, 0), newPos)) //Está a la izquierda
+		{
+			pos = newPos;
+		}
+		else if (y > 0 && game->tryMove(getDestRect(), Point2D(-1, 0), newPos)) {
+			pos = newPos;
+		}
+	}
+}
+
+
+
 void SmartGhost::update() {
 	handleState();
 	edad++;
-	if (edad < tiempoAdult) {
-		Ghost::update();
-	}
+	
 
-	if (edad > tiempoAdult) {
-		//muere
+	
+	int x, y = 0;
+	
+	cout << state << "\n";
+	if (state == Child || state == Adult) {
+
+		if (game->distanciaAlPacman(pos, x, y) < 175) {
+			
+			if (state == Adult) {
+				comer(game->getPacManPosAct());
+			}
+
+			movimiento(y, x);
+
+
+			if (state == Adult) {
+				comer(game->getPacManPosAct());
+			}
+
+
+		}
+		//si la distancia es mayor se hace el moviemiento normal de los fantasmas, además como esta lejos no importa que detecte el comer
+		else {
+			Ghost::update();
+		}
 	}
-	//Este método checkea si este fantasma colisiona con otros y además si lo hace y se deben reproducir se encarga de la reproducción
+	
+	
+
 	game->checkColisionFantasmas(this);
+	
 }
+
+
 
 void SmartGhost::render() const{
 	SDL_Rect destRect = getDestRect();

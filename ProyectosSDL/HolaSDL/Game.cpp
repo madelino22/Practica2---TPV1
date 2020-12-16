@@ -95,7 +95,7 @@ void Game::save() {
 
 
 
-	//archivoDeGuardado.open("..\\partidasGuardadas\\partidaGuardada" + numGuardado + ".txt");
+	//archivoDeGuardado.open("..\\partidasGuardadas\\partidaGuardada" + to_string(5) + ".txt");
 	archivoDeGuardado.open("..\\partidasGuardadas\\partidaGuardadaPrueba.txt");
 
 
@@ -121,14 +121,16 @@ void Game::save() {
 void Game::loadSavedGame() {
 	
 	/*
-	* cout << "introducir numero de la partida guardada";
+	cout << "introducir numero de la partida guardada";
 	int num;
 	cin >> num;
 	*/
 	
 	
+	
+	
 	ifstream archivoLeer;
-	//archivoLeer.open("..\\partidasGuardadas\\partidaGuardada" + num + ".txt");
+	//archivoLeer.open("..\\partidasGuardadas\\partidaGuardada" + to_string(num) + ".txt");
 	archivoLeer.open("..\\partidasGuardadas\\partidaGuardadaPrueba.txt");
 	
 	//cargar los datos de game
@@ -542,4 +544,25 @@ void Game::eraseGhost(list<GameObject*>::iterator itList) {
 	
 	objectsToErase.push_back(itList);
 	
+}
+
+
+
+
+int Game::distanciaAlPacman(Point2D posFantasma, int& x, int& y) {
+
+
+	int distancia;
+	//el rect es para coneguir facil, con un métdoo que ya tenemos la posición del pacman
+	SDL_Rect rect = pacman->getDestRect();
+	int a = rect.x - posFantasma.GetX();
+	int b = rect.y - posFantasma.GetY();
+	distancia = sqrt(pow(a, 2) + pow(b, 2));
+
+	//estas variables son para que sepa leugo en qué dirección ir
+	x = a;
+	y = b;
+
+	return distancia;
+
 }

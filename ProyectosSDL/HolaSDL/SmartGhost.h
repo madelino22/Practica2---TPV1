@@ -4,14 +4,14 @@ class SmartGhost: public Ghost
 {
 	const int tiempoChild = 400;
 	const int tiempoAdult = 1500;
-	const int tiempoDead = 1600;
-	const int tiempoQuerentine = 100;
+	const int tiempoDead = 1700;
 private:
 
 	void handleState();
+	void movimiento(int posRelPacmanY, int posRelPacmanX);
 
 protected:
-	enum State{Child, Adult, Quarentine, Dead};
+	enum State{Child, Adult, Dead};//la cuarentena se mide mediante la variable cooldown de ghost
 	int edad;
 	int capMov = 14;
 	State state;

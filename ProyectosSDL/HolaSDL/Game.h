@@ -96,6 +96,8 @@ public:
 		return pacman->getDestRect();
 	}
 
+
+	int distanciaAlPacman(Point2D posFantasma, int& x, int& y);
 	//lleva al pacman a la posición inicial y resta una vida, si no le quedan vidas se encarga de finalizar la partida
 	void pacManRespawn();
 	
