@@ -127,15 +127,17 @@ void Game::loadSavedGame() {
 	*/
 	
 	
-	
+	string file = "..\\partidasGuardadas\\partidaGuardadaPrueba.txt";
 	
 	ifstream archivoLeer;
 	//archivoLeer.open("..\\partidasGuardadas\\partidaGuardada" + to_string(num) + ".txt");
-	archivoLeer.open("..\\partidasGuardadas\\partidaGuardadaPrueba.txt");
-	
+	archivoLeer.open(file);
+	if (!archivoLeer.is_open()) throw(FileNotFoundError("No se ha podido abrir el archivo con la ruta: ", file));
 	//cargar los datos de game
 	archivoLeer >> nivel >> comida >> vidas;
-
+	if (nivel < 0 || comida < 0 || vidas < 0) {
+		throw(FileFormatError("Al intentar cargar de la partida(" + file + ") el nivel, la comida o las vidas tiene un formato erroneo(menor que 0)"));
+	}
 	//cargar el mapa
 	mapa = new GameMap(archivoLeer, this);
 	objetos.push_back(mapa);
@@ -143,6 +145,9 @@ void Game::loadSavedGame() {
 	//varaible para saber cuantos objetos de tipo character hay en la partida guardada 
 	int objetosCh;
 	archivoLeer >> objetosCh;
+	if (objetosCh < 5) {
+		throw(FileFormatError("Al intentar cargar de la partida(" + file + ") se han encontrado menos de 5 objetos de tipo character, lo que es imposible ya que siempre hay al menos cinco(4 ghost + pacman)"));
+	}
 	//Por último están los fantasmas y el pacman
 	for (int x = 0; x < objetosCh; x++) {
 		int tipo;
@@ -285,8 +290,10 @@ void Game::destruccionesCambioNivel() {
 	{
 		
 		cout << "Cargado con nuevo metodo \n";
-		std::ifstream in(file);
-		if (!in.is_open()) throw(Error("No se encuentra el fichero"));
+		std::ifstream in;
+		in.open(file);
+
+		if (!in.is_open()) throw(FileNotFoundError("No se ha podido abrir el archivo con la ruta: " ,file));
 
 		auto cinbuf = std::cin.rdbuf(in.rdbuf());
 
@@ -294,6 +301,13 @@ void Game::destruccionesCambioNivel() {
 		int fils, cols;
 
 		cin >> fils >> cols;
+
+		if (cin.fail()) {
+			throw(FileFormatError("Al leer el mapa del archivo(" + file + ") las filas o las columnas no son del tipo esperado(int)"));
+		}
+		else if (fils < 0 || cols < 0) {
+			throw(FileFormatError("Al leer el mapa del archivo(" + file + ") las filas o las columnas no son positivas"));
+		}
 
 		mapa = new GameMap(Point2D(0,0), WIN_WIDTH, WIN_HEIGHT, this, textures[0], textures[2], textures[3], fils, cols);
 		objetos.push_back(mapa);

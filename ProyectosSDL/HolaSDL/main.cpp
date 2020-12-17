@@ -6,6 +6,8 @@
 #include "Game.h"
 #include "Error.h"
 #include "checkML.h"
+#include "FileNotFoundError.h"
+#include "FileFormatError.h"
 
 using namespace std;
 
@@ -14,9 +16,9 @@ using uint = unsigned int;
 
 
 int main2() {
-	Game game = Game();
+	
 	try {
-		
+		Game game = Game();
 		game.run();
 	}
 	catch (string& e) {
@@ -24,6 +26,12 @@ int main2() {
 	}
 	catch (Error e) {
 		std::cout << e.getMensaje() << endl;
+	}
+	catch (FileNotFoundError& e) {
+		cout << e.what() << "\n";
+	}
+	catch (FileFormatError& e) {
+		cout << e.what() << "\n";
 	}
 	
 	//para poder leer la consola al final

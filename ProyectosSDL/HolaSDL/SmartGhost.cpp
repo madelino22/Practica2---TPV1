@@ -84,7 +84,6 @@ void SmartGhost::update() {
 	
 	int x, y = 0;
 	
-	cout << state << "\n";
 	if (state == Child || state == Adult) {
 
 		if (game->distanciaAlPacman(pos, x, y) < 175) {

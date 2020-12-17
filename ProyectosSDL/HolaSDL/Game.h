@@ -13,6 +13,9 @@
 #include <list>
 #include <string>
 #include "SmartGhost.h"
+#include "PacmanError.h"
+#include "FileNotFoundError.h"
+#include "FileFormatError.h"
 
 
 using namespace std;
