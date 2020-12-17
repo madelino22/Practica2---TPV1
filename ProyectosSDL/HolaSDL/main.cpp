@@ -6,6 +6,8 @@
 #include "Game.h"
 #include "Error.h"
 #include "checkML.h"
+#include "Pacman.h"
+#include "PacmanError.h"
 #include "FileNotFoundError.h"
 #include "FileFormatError.h"
 
@@ -27,12 +29,10 @@ int main2() {
 	catch (Error e) {
 		std::cout << e.getMensaje() << endl;
 	}
-	catch (FileNotFoundError& e) {
+	catch (PacmanError& e) {
 		cout << e.what() << "\n";
 	}
-	catch (FileFormatError& e) {
-		cout << e.what() << "\n";
-	}
+	
 	
 	//para poder leer la consola al final
 	system("pause");

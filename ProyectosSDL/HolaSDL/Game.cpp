@@ -41,11 +41,19 @@ Game::Game() {
 		//comida se rellena al construir el mapa en leeMapa
 		comida = 0;
 		vidas = 3;
-		loadLevelFile("..\\Mapas\\level01.dat");
+		loadLevelFile("..\\Mapas\\level01asdasd.dat");
 	}
 	else if (cargar == "c") {
 		//Cargar partida
-		loadSavedGame();
+		try {
+			loadSavedGame();
+		}
+		catch (PacmanError& e) {
+			//SI hay error al cargar el nivel
+			cout << e.what() << "\n Se va a cargar el nivel 1 \n";
+			loadLevelFile("..\\Mapas\\level01.dat");
+
+		}
 	}
 
 
@@ -293,7 +301,7 @@ void Game::destruccionesCambioNivel() {
 		std::ifstream in;
 		in.open(file);
 
-		if (!in.is_open()) throw(FileNotFoundError("No se ha podido abrir el archivo con la ruta: " ,file));
+		if (!in.is_open()) throw(FileNotFoundError("No se ha podido abrir el archivo con la ruta: " , file));
 
 		auto cinbuf = std::cin.rdbuf(in.rdbuf());
 
