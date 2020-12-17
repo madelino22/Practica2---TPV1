@@ -1,6 +1,5 @@
 #include "Game.h"
 #include <ctime>
-#include "Error.h"
 
 
 
@@ -9,13 +8,15 @@ Game::Game() {
 	//Constructora, crea el window y el renderer de sdl y además las texturas
 
 	srand(time(nullptr));
-	// We first initialize SDL
+	//inicializacion de SDL
 	SDL_Init(SDL_INIT_EVERYTHING);
-	window = SDL_CreateWindow("Juego con clases", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-		WIN_WIDTH, WIN_HEIGHT, SDL_WINDOW_SHOWN);
+	window = SDL_CreateWindow("Juego con clases", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WIN_WIDTH, WIN_HEIGHT, SDL_WINDOW_SHOWN);
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-	if (window == nullptr || renderer == nullptr) throw string("Error loading SDL window or renderer");
-	// We now create the textures
+	//si window es nullptr da mensaje de error pero el renderer no
+	if (window == nullptr || renderer == nullptr) throw SDLError(SDL_GetError());
+
+
+	// Creacion de las texturas
 	Texturas texturas;
 	for (uint i = 0; i < NUM_TEXTURES; i++) {
 		textures[i] = new Texture(renderer);
@@ -41,7 +42,7 @@ Game::Game() {
 		//comida se rellena al construir el mapa en leeMapa
 		comida = 0;
 		vidas = 3;
-		loadLevelFile("..\\Mapas\\level01asdasd.dat");
+		loadLevelFile("..\\Mapas\\level01.dat");
 	}
 	else if (cargar == "c") {
 		//Cargar partida

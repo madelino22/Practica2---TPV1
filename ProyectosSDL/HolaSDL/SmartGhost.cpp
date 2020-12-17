@@ -117,7 +117,11 @@ void SmartGhost::update() {
 
 void SmartGhost::render() const{
 	SDL_Rect destRect = getDestRect();
-	if (edad < tiempoChild) {
+	
+	//Esto funciona ya qeu es el destRect de arriba el que se le pasa a tryMove
+	//la modificacion del destRecto SOLO se hace aqui, en el render, por lo que para el juego sigue
+	//midiendo lo que mide un fantasma grande
+	if (state == Child) {
 		
 		destRect.x = destRect.x + destRect.w * 1 / 3;
 		destRect.y = destRect.y + destRect.h * 1 / 3;

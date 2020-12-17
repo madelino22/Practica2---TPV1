@@ -4,12 +4,10 @@
 #include "checkML.h"
 #include <iostream>
 #include "Game.h"
-#include "Error.h"
 #include "checkML.h"
 #include "Pacman.h"
 #include "PacmanError.h"
-#include "FileNotFoundError.h"
-#include "FileFormatError.h"
+
 
 using namespace std;
 
@@ -22,12 +20,6 @@ int main2() {
 	try {
 		Game game = Game();
 		game.run();
-	}
-	catch (string& e) {
-		cout << e;
-	}
-	catch (Error e) {
-		std::cout << e.getMensaje() << endl;
 	}
 	catch (PacmanError& e) {
 		cout << e.what() << "\n";

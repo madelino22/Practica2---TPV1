@@ -1,6 +1,7 @@
 
 #include "Texture.h"
 #include <iostream>
+#include "FileNotFoundError.h"
 
 using namespace std;
 
@@ -14,10 +15,10 @@ void Texture::Free() {
 //Se carga una textura desde un archivo
 void Texture::load(string filename, uint nRows, uint nCols) {
 	SDL_Surface* tempSurface = IMG_Load(filename.c_str());
-	if (tempSurface == nullptr) throw "Error cargando surface desde " + filename;
+	if (tempSurface == nullptr) throw FileNotFoundError("Error cargando surface desde ", filename);
 	Free();
 	texture = SDL_CreateTextureFromSurface(renderer, tempSurface);
-	if (texture == nullptr) throw "Error cargando texture desde " + filename;
+	if (texture == nullptr) throw FileNotFoundError("Error cargando texture desde ", filename);
 	
 	numRows = nRows;
 	numCols = nCols;

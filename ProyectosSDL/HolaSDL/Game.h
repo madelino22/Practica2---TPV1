@@ -16,6 +16,7 @@
 #include "PacmanError.h"
 #include "FileNotFoundError.h"
 #include "FileFormatError.h"
+#include "SDLError.h"
 
 
 using namespace std;
