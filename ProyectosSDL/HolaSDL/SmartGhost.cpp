@@ -36,42 +36,34 @@ void SmartGhost::movimiento(int posRelPacmanY, int posRelPacmanX) {
 	Point2D newPos;
 	int x = posRelPacmanX;
 	int y = posRelPacmanY;
-	if (!game->pacmanEating()) {
-		if (x < 0 && game->tryMove(getDestRect(), Point2D(0, -1), newPos)) //Está a la izquierda
+	Point2D dirXPos = Point2D(0, 1);
+	Point2D dirYPos = Point2D(1, 0);
+	
+	//si el pacman come tienen que ir en la dirección opuesta
+	if (game->pacmanEating()) {
+		dirXPos = dirXPos * -1;
+		dirYPos = dirYPos * -1;
+	}
+
+		if (x < 0 && game->tryMove(getDestRect(),dirXPos * -1, newPos)) //Está a la izquierda
 		{
 			pos = newPos;
 		}
-		else if (x > 0 && game->tryMove(getDestRect(), Point2D(0, 1), newPos)) //Está a la derecha
+		else if (x > 0 && game->tryMove(getDestRect(), dirXPos, newPos)) //Está a la derecha
 		{
 			pos = newPos;
 		}
 
-		if (y < 0 && game->tryMove(getDestRect(), Point2D(-1, 0), newPos)) //Está arriba
+		if (y < 0 && game->tryMove(getDestRect(), dirYPos * -1, newPos)) //Está arriba
 		{
 			pos = newPos;
 		}
-		else if (y > 0 && game->tryMove(getDestRect(), Point2D(1, 0), newPos)) //Está abajo
+		else if (y > 0 && game->tryMove(getDestRect(), dirYPos, newPos)) //Está abajo
 		{
 			pos = newPos;
 		}
-	}
-	else {
-		if (x < 0 && game->tryMove(getDestRect(), Point2D(0, 1), newPos)) //Está a la izquierda
-		{
-			pos = newPos;
-		}
-		else if (x > 0 && game->tryMove(getDestRect(), Point2D(0, -1), newPos)) {
-			pos = newPos;
-		}
-
-		if (y < 0 && game->tryMove(getDestRect(), Point2D(1, 0), newPos)) //Está a la izquierda
-		{
-			pos = newPos;
-		}
-		else if (y > 0 && game->tryMove(getDestRect(), Point2D(-1, 0), newPos)) {
-			pos = newPos;
-		}
-	}
+	
+		
 }
 
 
@@ -88,28 +80,22 @@ void SmartGhost::update() {
 
 		if (game->distanciaAlPacman(pos, x, y) < 175) {
 			
-			if (state == Adult) {
-				comer(game->getPacManPosAct());
-			}
-
+			
 			movimiento(y, x);
-
-
+			//solo come si es adulto, por loq eu si es pequeño, o está muertono puede comer ni ser comido, ya que comer() lleva las dos cosas
 			if (state == Adult) {
 				comer(game->getPacManPosAct());
 			}
-
-
 		}
-		//si la distancia es mayor se hace el moviemiento normal de los fantasmas, además como esta lejos no importa que detecte el comer
+		//si la distancia es mayor se hace el moviemiento normal de los fantasmas,
+		//además como esta lejos no importa que detecte el comer si es adulto o no ya que no se va a dar el caso
 		else {
 			Ghost::update();
 		}
 	}
 	
-	
-
-	game->checkColisionFantasmas(this);
+	//Este método comprueba si este fantasma a chocado con otros, si es así aplica los cambios qeu se deban(reproducción de smartghosts)
+	if(state == Adult)game->checkColisionFantasmas(this);
 	
 }
 

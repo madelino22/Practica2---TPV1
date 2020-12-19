@@ -23,6 +23,7 @@ public:
 	GameCharacter(Point2D posAct, int casillaWidth, int casillaHeight, Game* gameC, Point2D posIniC, Vector2D dirC, Texture* textureC, Point2D coorTextureC);
 	GameCharacter(ifstream& file, Game* gameC);
 
+	//devuelve el iterador que apunta al objeto en objects
 	void setItList(list<GameObject*>::iterator& itPasar) {
 		itList = itPasar;
 	};

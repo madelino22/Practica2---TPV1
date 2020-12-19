@@ -39,9 +39,11 @@ void Pacman::comerAlimento() {
 
 void Pacman::update() {
 	
+	//Se obtiene el rectángulo destino gracias al método del GameObject, devuelve la posición ya en pixeles y no en coordenadas de la casilla del mapa
 	SDL_Rect destRect = getDestRect();
 
 	Point2D newPos;
+	//primero comprueba si se puede mover a la dirección de la última tecla pulsada, si no, sigue en la dirección en la que estaba yendo
 	if (game->tryMove(destRect, newDir, newPos)){
 		dir = newDir;
 		pos = newPos;
@@ -64,6 +66,7 @@ void Pacman::update() {
 	
 }
 
+//comprueba los eventos, el pacman no se encarga de controlar la pulsaciónde la "s" para guardar la partida, eso lo hace Game
 void Pacman::handleEvents(const SDL_Event& event) {
 	if (event.type == SDL_KEYDOWN) {
 		SDL_Keycode key = event.key.keysym.sym;

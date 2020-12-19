@@ -62,8 +62,10 @@ private:
 
 	void LeeMapa();
 	void loadLevelFile(string file);
+	void loadGameCharacters(ifstream& file, int nObjetosCh);
 	void destruccionesCambioNivel();
-	
+
+	void storeGhost(Ghost* g);
 
 
 public:
@@ -126,8 +128,7 @@ public:
 	void handleEvents();
 	void update();
 
-	void fantasmasChocan();
-	void storeGhost(Ghost* g);
 	void checkColisionFantasmas(Ghost* g);
+
 };
 

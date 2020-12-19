@@ -6,7 +6,6 @@
 
 Game::Game() {
 	//Constructora, crea el window y el renderer de sdl y además las texturas
-
 	srand(time(nullptr));
 	//inicializacion de SDL
 	SDL_Init(SDL_INIT_EVERYTHING);
@@ -14,17 +13,12 @@ Game::Game() {
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 	//si window es nullptr da mensaje de error pero el renderer no
 	if (window == nullptr || renderer == nullptr) throw SDLError(SDL_GetError());
-
-
 	// Creacion de las texturas
 	Texturas texturas;
 	for (uint i = 0; i < NUM_TEXTURES; i++) {
 		textures[i] = new Texture(renderer);
 		textures[i]->load(texturas.file[i], texturas.fils[i], texturas.cols[i]);
 	}
-
-
-
 
 	string cargar;
 	cout << "jugar(p) o cargar partida(c)?\n";
@@ -35,7 +29,6 @@ Game::Game() {
 	}
 
 	objetosCharacter = 0;
-
 	if (cargar == "p") {
 		nivel = 1;
 		//valor inicial de las variables de la partida,
@@ -50,19 +43,13 @@ Game::Game() {
 			loadSavedGame();
 		}
 		catch (PacmanError& e) {
-			//SI hay error al cargar el nivel
+			//SI hay error al cargar el nivel se carga el nivel 1 para continuar con la ejecución
 			cout << e.what() << "\n Se va a cargar el nivel 1 \n";
 			loadLevelFile("..\\Mapas\\level01.dat");
-
 		}
 	}
-
-
 	pausado = false;
-
-	
 }
-
 
 Game::~Game() {
 
@@ -78,6 +65,7 @@ Game::~Game() {
 	
 }
 
+//como hay muchos siteios en los qeu se vaa necesitar crear un fantasma y hay código repetido se hace ese método
 void Game::storeGhost(Ghost* g) {
 	list<GameObject*>::iterator it = objetos.insert(objetos.end(), g);
 	g->setItList(it);
@@ -88,6 +76,8 @@ void Game::storeGhost(Ghost* g) {
 void Game::save() {
 	SDL_RenderClear(renderer);//limpiar pantalla
 
+
+	//No funciona el cargado y guardado a varias partidas guardadas, solo funciona a una(error cin)
 	/*
 	cout << "Introducir número de fichero guardado\n";
 	std::string numGuardado;
@@ -99,11 +89,7 @@ void Game::save() {
 
 	std::ofstream archivoDeGuardado;
 
-
-	
-
-
-
+	//lo comentado de abajo es lo que debería ir al cargar una partida introduciendo su número
 	//archivoDeGuardado.open("..\\partidasGuardadas\\partidaGuardada" + to_string(5) + ".txt");
 	archivoDeGuardado.open("..\\partidasGuardadas\\partidaGuardadaPrueba.txt");
 
@@ -114,8 +100,10 @@ void Game::save() {
 	//guardar los datos del mapa
 	mapa->saveToFile(archivoDeGuardado);
 
-	archivoDeGuardado << objetosCharacter << "\n";
 
+	//mira entodos los gameObjects, y si alguno es un gmaeCharacter lo guarda
+
+	archivoDeGuardado << objetosCharacter << "\n";
 	for (GameObject* o : objetos) {
 		GameCharacter* c = dynamic_cast<GameCharacter*>(o);
 		if (c != nullptr) c->saveToFile(archivoDeGuardado);
@@ -158,36 +146,36 @@ void Game::loadSavedGame() {
 		throw(FileFormatError("Al intentar cargar de la partida(" + file + ") se han encontrado menos de 5 objetos de tipo character, lo que es imposible ya que siempre hay al menos cinco(4 ghost + pacman)"));
 	}
 	//Por último están los fantasmas y el pacman
+	loadGameCharacters(archivoLeer, objetosCh);
+}
+
+void Game::loadGameCharacters(ifstream& file, int objetosCh) {
 	for (int x = 0; x < objetosCh; x++) {
 		int tipo;
-		archivoLeer >> tipo;
-		
-		if(tipo == 1)
+		file >> tipo;
+
+		if (tipo == 1)
 		{//si es algun fantasma
 			objetosCharacter++;
-			Ghost* g = new Ghost(archivoLeer, this);
+			Ghost* g = new Ghost(file, this);
 			storeGhost(g);
 		}
 		else if (tipo == 0) {
 			//si es el pacman
 			objetosCharacter++;
-			pacman = new Pacman(archivoLeer, this);
+			pacman = new Pacman(file, this);
 			objetos.push_back(pacman);
 		}
 		else if (tipo == 2) {
+			//si es un smartGhost
+			//tipoGhost no hace nada, pero como el saveToFile de Ghost tmb guarda un númreo para saber su tipo hay que tenerle en cuenta al leer
 			int tipoGhost;
-			archivoLeer >> tipoGhost;
+			file >> tipoGhost;
 			objetosCharacter++;
-			Ghost* g = new SmartGhost(archivoLeer, this);
+			Ghost* g = new SmartGhost(file, this);
 			storeGhost(g);
 		}
-		
-
 	}
-
-	
-
-	
 }
 
 void Game::run() {
@@ -206,6 +194,7 @@ void Game::run() {
 			render();
 		}
 		else {
+			//Esto era para la lectura de la partida que se quiere guardar, pero no funciona por el cin
 			save();
 			pausado = false;
 		}
@@ -217,12 +206,9 @@ void Game::run() {
 void Game::update() {
 	
 	for (GameObject* o : objetos) o->update();
-	
-	//fantasmasChocan();
-	
+	//el borrado de los smartghost en tiempo de ejecución se hace al final del update, ucando todos han hecho sus update,
+	//para que no de problemas
 	for (auto g : objectsToErase) {
-		
-		cout << "hola";
 		Ghost* c = dynamic_cast<Ghost*>(*g);
 		delete *g;
 		objetos.erase(g);
@@ -232,14 +218,14 @@ void Game::update() {
 	
 	objectsToErase.clear();
 
-	//meter las vidas también
+
+	//Contral de condiciones de vicotria y paso de nivel
 	if (comida <= 0) {
 		ganado = true;
 		
 		if (ganado && nivel == 4) {
 			exit = true;
 			cout << "Has ganado!\n";
-
 		}
 
 		else if (ganado && nivel < 4) {
@@ -295,21 +281,15 @@ void Game::destruccionesCambioNivel() {
 	ghosts.clear();
 
 }
-	void Game::loadLevelFile(string file)
-	{
-		
+
+void Game::loadLevelFile(string file)
+{
 		cout << "Cargado con nuevo metodo \n";
 		std::ifstream in;
 		in.open(file);
-
 		if (!in.is_open()) throw(FileNotFoundError("No se ha podido abrir el archivo con la ruta: " , file));
-
 		auto cinbuf = std::cin.rdbuf(in.rdbuf());
-
-
-		int fils, cols;
-
-		cin >> fils >> cols;
+		int fils, cols; cin >> fils >> cols;
 
 		if (cin.fail()) {
 			throw(FileFormatError("Al leer el mapa del archivo(" + file + ") las filas o las columnas no son del tipo esperado(int)"));
@@ -350,14 +330,10 @@ void Game::destruccionesCambioNivel() {
 					Point2D posIni = mapCordsToSDLPoint(Point2D(y, x));
 					Ghost* g = new SmartGhost(posIni, mapa->casillaW, mapa->casillaH, this, posIni, Point2D(0, 1), textures[1], Point2D(0, 8), 0);
 					storeGhost(g);
-
 				}
-				 
-				
-
 			}
 		}
-	}
+}
 
 
 	
@@ -416,12 +392,9 @@ bool Game::tryMove(const SDL_Rect& rect, Vector2D dir, Point2D& newPos) {
 
 
 	
-	//dire va a ser 1 en la dirección en la que se vaya, por eso se le multiplica por 10, para que avance 10 pixeles en esa dir
+	//dir va a ser 1 en la dirección en la que se vaya, por eso se le multiplica por 10, para que avance 10 pixeles en esa dir
 	newPos.SetX(rect.x + dir.GetX() * avanceEnX);
 	newPos.SetY(rect.y + dir.GetY() * avanceEnY);
-
-
-
 
 	//en vez de poner que cuando se salgan del limite de la pantalla se muevan al otro límite, está hehco que cuando lleguen
 	//al limite del mapa que foman las casillas (mapRect.x + mapa->casillaW * mapa->cols) en este caso el eje x, se muevan, ya que si no se hace así
@@ -516,50 +489,7 @@ void Game::checkColisionFantasmas(Ghost* g1) {
 	}
 
 
-void Game::fantasmasChocan() {
 
-	//Se comprueba las colisiones de los fonatasmas entre ellos
-	for (Ghost* g1 : ghosts) {
-		//si es uno inteligente puede qeu se reproduzca
-		SmartGhost* c1 = dynamic_cast<SmartGhost*>(g1);
-		if (c1 != nullptr) {
-			for (Ghost* g2 : ghosts) {
-				//para evitar comprobar la colision con él mismo
-				if (g1 != g2) {
-					SDL_Rect rect1 = g1->getDestRect();
-					SDL_Rect rect2 = g2->getDestRect();
-
-					//si ha colisionado con otro fantasma, y además los dos tienene el cooldown a menos de 0, ed decir pueden rerpoducirse los dos, se reproducen
-					//Además el cooldown coincide con el timpo que tardan en hacaerse adultos por lo que uno pequeño no podrá reproducirse
-					if (SDL_HasIntersection(&rect1, &rect2) && g1->getCooldown() <= 0 && g2->getCooldown() <= 0) {
-						g1->setCooldown(500);
-						g2->setCooldown(500);
-
-						objetosCharacter++;
-						SmartGhost* c2 = dynamic_cast<SmartGhost*>(g2);
-						//si choca con un smartghost
-						if (c2 != nullptr) {
-							Point2D posIni = Point2D(rect1.y, rect1.x);
-							Ghost* g = new SmartGhost(posIni, mapa->casillaW, mapa->casillaH, this, posIni, Point2D(0, 1), textures[1], Point2D(0, 8), 0);
-							storeGhost(g);
-						}
-						//si el fantasma con el que choca era uno normal
-						else {
-							Point2D posIni = Point2D(rect1.y, rect1.x);
-							//mete al final de la lista de fantasmas el fantasma que toca
-							Ghost* g = new Ghost(posIni, mapa->casillaW, mapa->casillaH, this, posIni, Point2D(0, 1), textures[1], Point2D(0, 0));
-							storeGhost(g);
-						}
-
-					}
-				}
-				
-			
-			}
-		}
-	}
-
-}
 
 
 
@@ -582,7 +512,7 @@ int Game::distanciaAlPacman(Point2D posFantasma, int& x, int& y) {
 	int b = rect.y - posFantasma.GetY();
 	distancia = sqrt(pow(a, 2) + pow(b, 2));
 
-	//estas variables son para que sepa leugo en qué dirección ir
+	//estas variables son para que sepa leugo en qué dirección ir, dependiendo de si son positivas o negativas, está arriba, abajo, derecha o izq
 	x = a;
 	y = b;
 

@@ -1,7 +1,27 @@
-﻿  Game.cpp
+﻿  FileFormatError.cpp
+  FileNotFoundError.cpp
+  Game.cpp
 C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\crtdbg.h(303,1): warning C4005: '_malloca': redefinición de macro
 C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\malloc.h(122): message : vea la definición anterior de '_malloca'
-C:\Users\lolit\OneDrive\Escritorio\práctica 2-TPV1\ProyectosSDL\HolaSDL\Game.cpp(10,12): warning C4244: 'argumento': conversión de 'time_t' a 'unsigned int'; posible pérdida de datos
-C:\Users\lolit\OneDrive\Escritorio\práctica 2-TPV1\ProyectosSDL\HolaSDL\Game.cpp(583,18): warning C4244: '=': conversión de 'double' a 'int'; posible pérdida de datos
-C:\Users\lolit\OneDrive\Escritorio\práctica 2-TPV1\ProyectosSDL\HolaSDL\Game.cpp(473): warning C4715: 'Game::getTexture': no todas las rutas de acceso de control devuelven un valor
+C:\Users\lolit\OneDrive\Escritorio\práctica 2-TPV1\ProyectosSDL\HolaSDL\Game.cpp(9,12): warning C4244: 'argumento': conversión de 'time_t' a 'unsigned int'; posible pérdida de datos
+C:\Users\lolit\OneDrive\Escritorio\práctica 2-TPV1\ProyectosSDL\HolaSDL\Game.cpp(513,18): warning C4244: '=': conversión de 'double' a 'int'; posible pérdida de datos
+  GameCharacter.cpp
+  GameMap.cpp
+  Ghost.cpp
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\crtdbg.h(303,1): warning C4005: '_malloca': redefinición de macro
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\malloc.h(122): message : vea la definición anterior de '_malloca'
+  Pacman.cpp
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\crtdbg.h(303,1): warning C4005: '_malloca': redefinición de macro
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\malloc.h(122): message : vea la definición anterior de '_malloca'
+  PacmanError.cpp
+  SDLError.cpp
+  SmartGhost.cpp
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\crtdbg.h(303,1): warning C4005: '_malloca': redefinición de macro
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\malloc.h(122): message : vea la definición anterior de '_malloca'
+  Texture.cpp
+  main.cpp
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\crtdbg.h(303,1): warning C4005: '_malloca': redefinición de macro
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\malloc.h(122): message : vea la definición anterior de '_malloca'
+  Generando código...
+C:\Users\lolit\OneDrive\Escritorio\práctica 2-TPV1\ProyectosSDL\HolaSDL\Game.cpp(446): warning C4715: 'Game::getTexture': no todas las rutas de acceso de control devuelven un valor
   HolaSDL.vcxproj -> C:\Users\lolit\OneDrive\Escritorio\práctica 2-TPV1\ProyectosSDL\bin\HolaSDLDebug.exe

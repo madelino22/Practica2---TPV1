@@ -31,6 +31,7 @@ public:
 
 	Point2D GetPosAct() const { return pos; }
 	Point2D GetPosIni() const { return posIni; }
+	//devuelve una variable para saber si está comiendo, es util para qeu los fantamas los sepan y asi puedan comer o ser comidos
 	bool GetEating() const { return eating; }
 
 

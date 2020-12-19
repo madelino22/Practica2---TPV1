@@ -23,7 +23,7 @@ protected:
 	int capMov;
 	int cooldown;
 
-	bool comer(Point2D posPacMan);//de momento es bool pero no se usa
+	bool comer(Point2D posPacMan);
 	void morir();
 
 public:
